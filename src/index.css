@@ -1,0 +1,179 @@
+@import "tailwindcss";
+
+html {
+  scroll-behavior: smooth;
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.15;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* ---------- Rocket-ship cursor ---------- */
+
+* {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cg transform='rotate(-45 16 16)'%3E%3Cpath d='M13 22 L16 30 L19 22 Z' fill='%23fb923c'/%3E%3Cpath d='M16 2 C22 8 22 16 20 22 L12 22 C10 16 10 8 16 2 Z' fill='%23e2e8f0' stroke='%236366f1' stroke-width='1.2'/%3E%3Ccircle cx='16' cy='12' r='2.5' fill='%236366f1'/%3E%3Cpath d='M12 18 L8 22 L12 22 Z' fill='%236366f1'/%3E%3Cpath d='M20 18 L24 22 L20 22 Z' fill='%236366f1'/%3E%3C/g%3E%3C/svg%3E")
+      6 6,
+    auto;
+}
+
+/* keep typing usable in the contact form */
+input,
+textarea,
+select {
+  cursor: text;
+}
+
+/* ---------- Comets & satellite (project modal) ---------- */
+
+.comet {
+  position: absolute;
+  left: 0;
+  height: 2px;
+  width: 130px;
+  border-radius: 9999px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(199, 210, 254, 0.55) 70%,
+    #ffffff 100%
+  );
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.7));
+  animation: comet-fly linear infinite;
+  animation-fill-mode: backwards;
+}
+
+@keyframes comet-fly {
+  0% {
+    transform: translate(-12vw, 0) rotate(18deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(115vw, 30vh) rotate(18deg);
+    opacity: 0;
+  }
+}
+
+.space-drift {
+  position: absolute;
+  left: 0;
+  animation: space-drift 18s linear infinite;
+  animation-fill-mode: backwards;
+}
+
+@keyframes space-drift {
+  0% {
+    transform: translate(-6vw, 0) rotate(0deg);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.75;
+  }
+  88% {
+    opacity: 0.75;
+  }
+  100% {
+    transform: translate(106vw, -4vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .star,
+  .comet,
+  .space-drift {
+    animation: none !important;
+  }
+}
+
+/* ---------- Skills solar system ---------- */
+
+.solar-sun {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 15cqmin;
+  height: 15cqmin;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 35% 30%, #fde68a, #f59e0b 45%, #b45309 92%);
+  animation: solar-pulse 4s ease-in-out infinite;
+}
+
+@keyframes solar-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 9cqmin 1cqmin rgba(251, 191, 36, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 13cqmin 3cqmin rgba(251, 191, 36, 0.45);
+  }
+}
+
+.solar-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--d);
+  height: var(--d);
+  transform: translate(-50%, -50%);
+  border: 1px dashed rgba(148, 163, 184, 0.18);
+  border-radius: 9999px;
+}
+
+.solar-orbit {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform: rotate(var(--angle)) translateX(var(--radius))
+    rotate(calc(-1 * var(--angle)));
+  animation: solar-spin var(--duration, 40s) linear infinite;
+}
+
+.solar-orbit.reverse {
+  animation-direction: reverse;
+}
+
+.solar-orbit:hover {
+  animation-play-state: paused;
+  z-index: 20;
+}
+
+@keyframes solar-spin {
+  from {
+    transform: rotate(var(--angle)) translateX(var(--radius))
+      rotate(calc(-1 * var(--angle)));
+  }
+  to {
+    transform: rotate(calc(var(--angle) + 360deg)) translateX(var(--radius))
+      rotate(calc(-1 * (var(--angle) + 360deg)));
+  }
+}
+
+.solar-planet {
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .solar-orbit,
+  .solar-sun {
+    animation: none;
+  }
+}
