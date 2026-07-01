@@ -1,25 +1,39 @@
-import { useState } from 'react'
+import { useState, type FormEvent } from 'react'
 import {
   FaEnvelope,
   FaGithub,
   FaLinkedin,
   FaPaperPlane,
+  FaCheck,
+  FaSpinner,
 } from 'react-icons/fa6'
 import { profile } from '../data'
 import Section from './Section'
 
+const FORMSPREE_URL = 'https://formspree.io/f/mjgqaeew'
+
 export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', message: '' })
+  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    // No backend: compose an email in the visitor's mail client.
-    // To use a real form service (e.g. Formspree), POST to your endpoint here instead.
-    const subject = encodeURIComponent(`Portfolio message from ${form.name}`)
-    const body = encodeURIComponent(
-      `${form.message}\n\nFrom: ${form.name} (${form.email})`,
-    )
-    window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`
+    setStatus('sending')
+
+    try {
+      const res = await fetch(FORMSPREE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+
+      if (!res.ok) throw new Error('Failed to send')
+
+      setStatus('sent')
+      setForm({ name: '', email: '', message: '' })
+    } catch {
+      setStatus('error')
+    }
   }
 
   const inputClass =
@@ -136,13 +150,29 @@ export default function Contact() {
               />
             </div>
 
-            <button
-              type="submit"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-indigo-500 px-6 py-3 font-medium text-white transition-colors hover:bg-indigo-400"
-            >
-              <FaPaperPlane className="text-sm" />
-              Send message
-            </button>
+            {status === 'sent' ? (
+              <p className="flex items-center justify-center gap-2 rounded-lg border border-emerald-600 bg-emerald-950/40 px-6 py-3 font-medium text-emerald-400">
+                <FaCheck /> Message sent!
+              </p>
+            ) : (
+              <button
+                type="submit"
+                disabled={status === 'sending'}
+                className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-indigo-500 px-6 py-3 font-medium text-white transition-colors hover:bg-indigo-400 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {status === 'sending' ? (
+                  <FaSpinner className="animate-spin text-sm" />
+                ) : (
+                  <FaPaperPlane className="text-sm" />
+                )}
+                {status === 'sending' ? 'Sending...' : 'Send message'}
+              </button>
+            )}
+            {status === 'error' && (
+              <p className="mt-2 text-sm text-red-400">
+                Something went wrong. Please try again or email me directly.
+              </p>
+            )}
           </div>
         </form>
       </div>
