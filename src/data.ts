@@ -11,7 +11,7 @@ export const profile = {
   // Drop your resume PDF in the /public folder and point this at it.
   resumeUrl: `${import.meta.env.BASE_URL}resume.pdf`,
   // Put a photo in /public (e.g. /me.jpg) and set it here to replace the placeholder.
-  photo: '',
+  photo: `${import.meta.env.BASE_URL}photos/profile.jpeg`,
   socials: {
     github: 'https://github.com/justinebacurin1927',
     linkedin: '', // coming soon — fill this in to show the LinkedIn link
