@@ -9,7 +9,7 @@ export const profile = {
     "I'm a Bachelor of Science in Information Technology graduate aspiring to grow as a software and web developer. I enjoy creating ideas and solving practical, real-world problems through code. I work across the stack — from building interfaces to wiring up databases — and I'm eager to keep exploring and learning new things throughout my career.",
   email: 'JustineBacurin1927@gmail.com',
   // Drop your resume PDF in the /public folder and point this at it.
-  resumeUrl: '/resume.pdf',
+  resumeUrl: `${import.meta.env.BASE_URL}resume.pdf`,
   // Put a photo in /public (e.g. /me.jpg) and set it here to replace the placeholder.
   photo: '',
   socials: {
