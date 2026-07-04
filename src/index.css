@@ -4,6 +4,13 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Justified text for project descriptions */
+.justified {
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
+}
+
 @keyframes twinkle {
   0%,
   100% {
@@ -89,10 +96,106 @@ select {
   }
 }
 
+/* ---------- Sun orbit (hero) ---------- */
+
+.sun-orbit-slow {
+  animation: spin-slow 24s linear infinite;
+}
+
+.sun-orbit-slower {
+  animation: spin-slower 36s linear infinite;
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spin-slower {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+/* ---------- Project page horizontal slide ---------- */
+
+@keyframes slide-from-right {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-from-left {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.slide-from-right {
+  animation: slide-from-right 0.35s ease-out;
+}
+
+.slide-from-left {
+  animation: slide-from-left 0.35s ease-out;
+}
+
+/* ---------- Sun corona (hero) ---------- */
+
+@keyframes corona-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes corona-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.04);
+  }
+}
+
+.corona-pulse {
+  animation: corona-pulse 4s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .star,
   .comet,
-  .space-drift {
+  .space-drift,
+  .sun-orbit-slow,
+  .sun-orbit-slower,
+  .corona-pulse,
+  .slide-from-right,
+  .slide-from-left {
+    animation: none !important;
+  }
+
+  [class*="animate-"] {
     animation: none !important;
   }
 }

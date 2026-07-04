@@ -2,8 +2,8 @@ import { profile } from '../data'
 
 export default function Footer() {
   return (
-    <footer className="border-t border-slate-800/60 py-8">
-      <div className="mx-auto flex max-w-5xl flex-col items-center gap-4 px-6 text-sm text-slate-500 sm:flex-row sm:justify-between">
+    <footer className="bg-[#020806]">
+      <div className="mx-auto flex max-w-5xl flex-col items-center gap-4 px-6 py-10 text-sm text-slate-500 sm:flex-row sm:justify-between">
         <p>
           © {new Date().getFullYear()} {profile.name}. Built with React &
           Tailwind.

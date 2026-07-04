@@ -172,7 +172,7 @@ export default function ProjectModal({ project, onClose }: Props) {
             ))}
           </ul>
 
-          <p className="mt-4 text-sm leading-relaxed text-slate-300">
+          <p className="mt-4 text-sm leading-relaxed text-slate-300 justified">
             {project.overview ?? project.description}
           </p>
 
