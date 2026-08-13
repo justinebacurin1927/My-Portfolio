@@ -1,32 +1,56 @@
-# React + TypeScript + Vite
+# Justine Bacurin — Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A responsive, space-themed portfolio showcasing my background, technical skills, and selected software projects.
 
-Currently, two official plugins are available:
+## Built with
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React 19 and TypeScript
+- Vite
+- Tailwind CSS 4
+- React Icons
+- Formspree for contact-form delivery
+- GitHub Pages for hosting
 
-## React Compiler
+## Local development
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Requirements: Node.js 20.19+ or 22.12+ and npm.
 
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Vite prints the local development URL in the terminal.
+
+## Commands
+
+```bash
+npm run dev      # Start the development server
+npm run lint     # Run Oxlint
+npm run build    # Type-check and create a production build
+npm run preview  # Preview the production build locally
+npm run deploy   # Publish dist/ to the gh-pages branch
+```
+
+## Updating content
+
+Most portfolio copy, profile links, skills, projects, screenshots, and résumé paths are configured in [`src/data.ts`](src/data.ts).
+
+- Put project screenshots in `public/projects/`.
+- Put the profile photo in `public/photos/`.
+- Replace `public/resume.pdf` when the résumé changes.
+- Update `FORMSPREE_URL` in `src/components/Contact.tsx` if the contact form changes.
+
+Because the site is hosted under `/My-Portfolio/`, public asset paths should use `import.meta.env.BASE_URL` when referenced from TypeScript.
+
+## Deployment
+
+Create and verify the production build before publishing:
+
+```bash
+npm run lint
+npm run build
+npm run deploy
+```
+
+The live site is available at [justinebacurin1927.github.io/My-Portfolio](https://justinebacurin1927.github.io/My-Portfolio/).

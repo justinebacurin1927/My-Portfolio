@@ -2,31 +2,32 @@ import { profile } from '../data'
 
 export default function Footer() {
   return (
-    <footer className="bg-[#020806]">
-      <div className="mx-auto flex max-w-5xl flex-col items-center gap-4 px-6 py-10 text-sm text-slate-500 sm:flex-row sm:justify-between">
-        <p>
-          © {new Date().getFullYear()} {profile.name}. Built with React &
-          Tailwind.
-        </p>
-        <div className="flex gap-6">
-          <a
-            href={profile.socials.github}
-            target="_blank"
-            rel="noreferrer"
-            className="transition-colors hover:text-slate-300"
-          >
-            GitHub
-          </a>
-          {profile.socials.linkedin && (
+    <footer id="footer" className="pixel-footer">
+      <div className="pixel-crowd-footer">
+        <img
+          src={`${import.meta.env.BASE_URL}footer-plush-crowd.webp`}
+          alt="A crowd of different pixel-art stuffed toys"
+          loading="lazy"
+          decoding="async"
+          className="pixel-crowd-image"
+        />
+        <div className="pixel-crowd-credit">
+          <p>© {new Date().getFullYear()} {profile.name} // React + Tailwind</p>
+          <span aria-hidden="true">|</span>
+          <div className="flex gap-4">
             <a
-              href={profile.socials.linkedin}
+              href={profile.socials.github}
               target="_blank"
               rel="noreferrer"
-              className="transition-colors hover:text-slate-300"
             >
-              LinkedIn
+              GitHub
             </a>
-          )}
+            {profile.socials.linkedin && (
+              <a href={profile.socials.linkedin} target="_blank" rel="noreferrer">
+                LinkedIn
+              </a>
+            )}
+          </div>
         </div>
       </div>
     </footer>

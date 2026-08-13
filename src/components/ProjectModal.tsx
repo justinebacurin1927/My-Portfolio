@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import {
   FaGithub,
   FaArrowUpRightFromSquare,
@@ -6,6 +6,7 @@ import {
   FaMeteor,
 } from 'react-icons/fa6'
 import type { Project } from '../data'
+import BlurImage from './BlurImage'
 
 type Props = {
   project: Project
@@ -21,6 +22,8 @@ type Decor = {
 }
 
 export default function ProjectModal({ project, onClose }: Props) {
+  const dialogRef = useRef<HTMLDivElement>(null)
+
   // Randomized space decor, regenerated each time a modal opens.
   const decor = useMemo<Decor[]>(() => {
     const types: Decor['type'][] = [
@@ -56,27 +59,68 @@ export default function ProjectModal({ project, onClose }: Props) {
 
   // Close on Escape and lock background scroll while open.
   useEffect(() => {
+    const previouslyFocused = document.activeElement as HTMLElement | null
+    const previousOverflow = document.body.style.overflow
+    const dialog = dialogRef.current
+    const focusableSelector =
+      'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
+      if (e.key === 'Escape') {
+        onClose()
+        return
+      }
+
+      if (e.key !== 'Tab' || !dialog) return
+
+      const focusable = Array.from(
+        dialog.querySelectorAll<HTMLElement>(focusableSelector),
+      )
+      if (focusable.length === 0) {
+        e.preventDefault()
+        dialog.focus()
+        return
+      }
+
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault()
+        last.focus()
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault()
+        first.focus()
+      }
     }
+
+    const focusFrame = requestAnimationFrame(() => {
+      dialog?.querySelector<HTMLElement>(focusableSelector)?.focus()
+    })
+
     document.addEventListener('keydown', onKey)
     document.body.style.overflow = 'hidden'
+
     return () => {
+      cancelAnimationFrame(focusFrame)
       document.removeEventListener('keydown', onKey)
-      document.body.style.overflow = ''
+      document.body.style.overflow = previousOverflow
+      previouslyFocused?.focus()
     }
   }, [onClose])
 
   return (
     <div
+      ref={dialogRef}
       className="fixed inset-0 z-[100] flex items-center justify-center p-4"
       role="dialog"
       aria-modal="true"
-      aria-label={project.title}
+      aria-labelledby="project-modal-title"
+      aria-describedby="project-modal-description"
+      tabIndex={-1}
     >
       {/* backdrop */}
       <div
-        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+        className="pixel-modal-backdrop absolute inset-0"
         onClick={onClose}
       />
 
@@ -85,16 +129,11 @@ export default function ProjectModal({ project, onClose }: Props) {
         className="pointer-events-none absolute inset-0 overflow-hidden"
         aria-hidden="true"
       >
-        {/* nebula glows */}
-        <div className="absolute -left-16 top-0 h-60 w-60 rounded-full bg-indigo-600/20 blur-3xl" />
-        <div className="absolute -right-12 bottom-0 h-72 w-72 rounded-full bg-fuchsia-600/15 blur-3xl" />
-        <div className="absolute left-1/2 top-1/4 h-44 w-44 -translate-x-1/2 rounded-full bg-sky-500/10 blur-3xl" />
-
         {/* twinkling stars */}
         {stars.map((s, i) => (
           <span
             key={`s${i}`}
-            className="star absolute rounded-full bg-white"
+            className="star pixel-star absolute"
             style={{
               top: `${s.top}%`,
               left: `${s.left}%`,
@@ -137,24 +176,28 @@ export default function ProjectModal({ project, onClose }: Props) {
       </div>
 
       {/* panel */}
-      <div className="relative z-10 max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-slate-700 bg-slate-900 shadow-2xl">
+      <div className="pixel-modal-panel relative z-10 max-h-[90vh] w-full max-w-lg overflow-y-auto">
+        <div className="pixel-terminal-bar sticky top-0 z-20">
+          <span>PROJECT_DATA.LOG</span>
+          <span>READ_ONLY</span>
+        </div>
         <button
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-slate-800/80 text-slate-300 transition-colors hover:bg-slate-700 hover:text-white"
+          className="pixel-button absolute right-3 top-11 z-10 flex h-8 w-8 items-center justify-center bg-red-500 text-white hover:bg-red-400"
         >
           ✕
         </button>
 
         {project.image ? (
-          <img
+          <BlurImage
             src={project.image}
             alt={`${project.title} screenshot`}
-            className="aspect-video w-full object-cover"
+            className="aspect-video w-full"
           />
         ) : (
-          <div className="flex aspect-video w-full items-center justify-center bg-gradient-to-br from-indigo-500/30 to-slate-800">
+          <div className="pixel-placeholder flex aspect-video w-full items-center justify-center">
             <span className="font-mono text-sm text-slate-300">
               {project.title}
             </span>
@@ -162,17 +205,22 @@ export default function ProjectModal({ project, onClose }: Props) {
         )}
 
         <div className="p-6">
-          <h3 className="text-xl font-semibold text-white">{project.title}</h3>
+          <h3 id="project-modal-title" className="text-2xl font-bold uppercase text-white">
+            {project.title}
+          </h3>
 
           <ul className="mt-3 flex flex-wrap gap-2">
             {project.tags.map((tag) => (
-              <li key={tag} className="font-mono text-xs text-indigo-300">
-                {tag}
+              <li key={tag} className="pixel-chip px-2 py-1 text-xs text-cyan-200">
+                #{tag}
               </li>
             ))}
           </ul>
 
-          <p className="mt-4 text-sm leading-relaxed text-slate-300 justified">
+          <p
+            id="project-modal-description"
+            className="mt-4 text-sm leading-relaxed text-slate-300 justified"
+          >
             {project.overview ?? project.description}
           </p>
 
@@ -182,21 +230,30 @@ export default function ProjectModal({ project, onClose }: Props) {
                 href={project.repo}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-lg bg-slate-800 px-4 py-2 text-sm font-medium text-slate-200 transition-colors hover:bg-slate-700"
+                className="pixel-button inline-flex items-center gap-2 bg-slate-700 px-4 py-2 text-sm font-bold uppercase text-slate-100 hover:bg-slate-600"
               >
                 <FaGithub className="text-base" /> GitHub
               </a>
             )}
-            {project.link && (
+            {project.demoStatus ? (
+              <span
+                aria-disabled="true"
+                className="inline-flex cursor-not-allowed items-center gap-2 border-3 border-slate-950 bg-slate-800 px-4 py-2 text-sm font-bold uppercase text-slate-400"
+                title="This project demo is not available yet"
+              >
+                <FaArrowUpRightFromSquare className="text-sm" aria-hidden="true" />
+                {project.demoStatus}
+              </span>
+            ) : project.link ? (
               <a
                 href={project.link}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-lg bg-indigo-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-400"
+                className="pixel-button inline-flex items-center gap-2 bg-indigo-500 px-4 py-2 text-sm font-bold uppercase text-white hover:bg-indigo-400"
               >
                 <FaArrowUpRightFromSquare className="text-sm" /> Live Demo
               </a>
-            )}
+            ) : null}
           </div>
         </div>
       </div>

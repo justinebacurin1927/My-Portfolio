@@ -77,7 +77,7 @@ export default function SkillsSolarSystem() {
         ))}
 
         {/* sun */}
-        <div className="solar-sun shadow-amber-500/40">
+        <div className="solar-sun">
           <FaCode className="text-[6cqmin] text-amber-50" />
         </div>
 
@@ -98,17 +98,21 @@ export default function SkillsSolarSystem() {
                   } as CSSProperties
                 }
               >
-                <div className="solar-planet group">
+                <button
+                  type="button"
+                  className="solar-planet group focus:outline-none focus-visible:ring-4 focus-visible:ring-cyan-300"
+                  aria-label={planet.name}
+                >
                   <div
-                    className="flex h-[9cqmin] w-[9cqmin] items-center justify-center rounded-full border border-slate-700/80 bg-slate-900/90 shadow-lg shadow-black/40 transition-transform duration-200 group-hover:scale-125 group-hover:border-slate-500"
+                    className="pixel-planet flex h-[9cqmin] w-[9cqmin] items-center justify-center transition-transform duration-200 group-hover:scale-125"
                     style={{ color: planet.color }}
                   >
-                    <Icon className="text-[5cqmin]" />
+                    <Icon className="text-[5cqmin]" aria-hidden="true" />
                   </div>
-                  <span className="pointer-events-none absolute bottom-full left-1/2 z-30 mb-2 -translate-x-1/2 whitespace-nowrap rounded-md border border-slate-700 bg-slate-800 px-2 py-1 text-xs font-medium text-white opacity-0 shadow-lg transition-opacity duration-200 group-hover:opacity-100">
+                  <span className="pointer-events-none absolute bottom-full left-1/2 z-30 mb-2 -translate-x-1/2 whitespace-nowrap border-2 border-slate-950 bg-cyan-300 px-2 py-1 text-xs font-bold uppercase text-slate-950 opacity-0 shadow-[3px_3px_0_#020617] transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100">
                     {planet.name}
                   </span>
-                </div>
+                </button>
               </div>
             )
           }),

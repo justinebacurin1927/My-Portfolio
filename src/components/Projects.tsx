@@ -2,6 +2,7 @@ import { useState, useRef } from 'react'
 import { projects } from '../data'
 import type { Project } from '../data'
 import ProjectModal from './ProjectModal'
+import BlurImage from './BlurImage'
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa6'
 
 const PER_PAGE = 3
@@ -30,9 +31,10 @@ export default function Projects() {
 
   return (
     <section id="projects" className="scroll-mt-20 px-4 pt-6 sm:px-6 sm:pt-8">
-      <div className="mx-auto max-w-6xl rounded-3xl border border-slate-800/70 border-b-transparent bg-slate-900/40 px-6 py-14 shadow-xl shadow-black/30 backdrop-blur-sm sm:px-12">
-        <h2 className="mb-8 text-2xl font-bold text-white">
-          My Projects I built throughout my Journey
+      <div className="pixel-panel mx-auto max-w-6xl px-6 py-14 sm:px-12">
+        <div className="pixel-section-label mb-6">02 // PROJECT_LOG</div>
+        <h2 className="mb-8 text-3xl font-bold uppercase text-white">
+          Selected projects
         </h2>
 
         <div
@@ -44,17 +46,16 @@ export default function Projects() {
               type="button"
               key={project.title}
               onClick={() => setSelected(project)}
-              className="group flex flex-col overflow-hidden rounded-xl border border-slate-800 bg-slate-900/50 text-left transition-colors hover:border-indigo-500/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+              className="pixel-card group flex flex-col overflow-hidden text-left focus:outline-none focus-visible:ring-4 focus-visible:ring-cyan-300"
             >
               {project.image ? (
-                <img
+                <BlurImage
                   src={project.image}
                   alt={`${project.title} screenshot`}
-                  loading="lazy"
-                  className="aspect-video w-full object-cover"
+                  className="aspect-video w-full"
                 />
               ) : (
-                <div className="flex aspect-video w-full items-center justify-center bg-gradient-to-br from-indigo-500/30 to-slate-800">
+                <div className="pixel-placeholder flex aspect-video w-full items-center justify-center">
                   <span className="font-mono text-sm text-slate-300">
                     {project.title}
                   </span>
@@ -74,8 +75,8 @@ export default function Projects() {
                   ))}
                 </ul>
 
-                <span className="mt-auto pt-5 text-sm font-medium text-indigo-300 transition-transform group-hover:translate-x-1">
-                  View details →
+                <span className="mt-auto pt-5 text-sm font-bold uppercase tracking-wider text-cyan-300">
+                  [ View details ]
                 </span>
               </div>
             </button>
@@ -84,12 +85,17 @@ export default function Projects() {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="mt-10 flex items-center justify-center gap-6">
+          <div
+            className="mt-10 flex items-center justify-center gap-6"
+            role="navigation"
+            aria-label="Project pages"
+          >
             <button
               type="button"
               onClick={goPrev}
               disabled={page === 0}
-              className="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-700 text-slate-300 transition-colors hover:border-indigo-500 hover:text-indigo-300 disabled:cursor-not-allowed disabled:opacity-40"
+              aria-label="Previous project page"
+              className="pixel-button flex h-10 w-10 items-center justify-center bg-slate-800 text-slate-200 hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-40"
             >
               <FaArrowLeft />
             </button>
@@ -103,12 +109,13 @@ export default function Projects() {
                     dir.current = i > page ? 'right' : 'left'
                     setPage(i)
                   }}
-                  className={`h-2.5 w-2.5 rounded-full transition-all ${
+                  className={`h-3 w-3 border-2 border-slate-950 transition-all ${
                     i === page
-                      ? 'w-7 bg-indigo-500'
-                      : 'bg-slate-700 hover:bg-slate-500'
+                      ? 'w-8 bg-cyan-300'
+                      : 'bg-slate-700 hover:bg-indigo-400'
                   }`}
                   aria-label={`Page ${i + 1}`}
+                  aria-current={i === page ? 'page' : undefined}
                 />
               ))}
             </div>
@@ -117,7 +124,8 @@ export default function Projects() {
               type="button"
               onClick={goNext}
               disabled={page === totalPages - 1}
-              className="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-700 text-slate-300 transition-colors hover:border-indigo-500 hover:text-indigo-300 disabled:cursor-not-allowed disabled:opacity-40"
+              aria-label="Next project page"
+              className="pixel-button flex h-10 w-10 items-center justify-center bg-slate-800 text-slate-200 hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-40"
             >
               <FaArrowRight />
             </button>

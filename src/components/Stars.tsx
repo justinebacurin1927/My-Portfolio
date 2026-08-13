@@ -1,13 +1,19 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 
 type Props = {
+  /** Desktop star count. Halved on narrow screens. */
   count?: number
 }
 
 export default function Stars({ count = 140 }: Props) {
+  const [isMobile] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth < 640 : false,
+  )
+  const starCount = isMobile ? Math.round(count * 0.35) : count
+
   const stars = useMemo(
     () =>
-      Array.from({ length: count }, () => {
+      Array.from({ length: starCount }, () => {
         const size = Math.random() * 2 + 1 // 1–3px
         return {
           top: Math.random() * 100,
@@ -19,18 +25,18 @@ export default function Stars({ count = 140 }: Props) {
           glow: size > 2.4,
         }
       }),
-    [count],
+    [starCount],
   )
 
   return (
     <div
-      className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
+      className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
       aria-hidden="true"
     >
       {stars.map((s, i) => (
         <span
           key={i}
-          className="star absolute rounded-full bg-white"
+        className={`star pixel-star absolute ${i % 9 === 0 ? 'pixel-star-accent' : ''}`}
           style={{
             top: `${s.top}%`,
             left: `${s.left}%`,

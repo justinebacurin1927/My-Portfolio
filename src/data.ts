@@ -2,7 +2,7 @@
 
 export const profile = {
   name: 'Justine Bacurin',
-  role: 'Aspiring Software & Web Developer',
+  role: 'BSIT Graduate · Aspiring Software & Web Developer',
   tagline:
     'IT graduate who loves turning ideas into practical, real-world solutions.',
   about:
@@ -11,10 +11,11 @@ export const profile = {
   // Drop your resume PDF in the /public folder and point this at it.
   resumeUrl: `${import.meta.env.BASE_URL}resume.pdf`,
   // Put a photo in /public (e.g. /me.jpg) and set it here to replace the placeholder.
-  photo: `${import.meta.env.BASE_URL}photos/profile.jpeg`,
+  photo: `${import.meta.env.BASE_URL}photos/new.jpeg`,
+  pixelPhoto: `${import.meta.env.BASE_URL}photos/profile-pixel.webp`,
   socials: {
     github: 'https://github.com/justinebacurin1927',
-    linkedin: '', // coming soon — fill this in to show the LinkedIn link
+    linkedin: 'https://www.linkedin.com/in/justine-bacurin',
   },
 }
 
@@ -45,6 +46,8 @@ export type Project = {
   // Leave undefined to show a colored gradient placeholder instead.
   image?: string
   link?: string
+  // Keeps a future demo URL on record while showing a non-clickable placeholder.
+  demoStatus?: string
   repo?: string
 }
 
@@ -67,6 +70,7 @@ export const projects: Project[] = [
     image: `${import.meta.env.BASE_URL}projects/arko-login.png`,
     tags: ['React', 'TypeScript', 'Django', 'PostgreSQL', 'Full-Stack'],
     link: 'https://arko-internal-system.vercel.app',
+    demoStatus: 'Live demo coming soon',
     repo: 'https://github.com/justinebacurin1927/Internal-ARKO-System',
   },
   {
@@ -106,6 +110,7 @@ export const projects: Project[] = [
     image: `${import.meta.env.BASE_URL}projects/sendflow.png`,
     tags: ['Laravel', 'PHP', 'PostgreSQL'],
     link: 'https://sendflow-email-marketing.onrender.com',
+    demoStatus: 'Live demo coming soon',
     repo: 'https://github.com/justinebacurin1927/Email-Marketing',
   },
   {
