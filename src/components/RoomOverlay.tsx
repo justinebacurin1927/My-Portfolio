@@ -11,11 +11,9 @@ type Props = {
   onClose: () => void
 }
 
-const appTitles: Record<RoomApp, string> = {
-  welcome: 'WELCOME.TXT',
-  projects: 'PROJECTS.EXE',
+const appTitles = {
+  projects: 'DESKTOP.EXE',
   about: 'ABOUT_ME.TXT',
-  contact: 'CONTACT.EXE',
 }
 
 export default function RoomOverlay({ activeApp, onClose }: Props) {
@@ -23,20 +21,25 @@ export default function RoomOverlay({ activeApp, onClose }: Props) {
   const windowRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
-    if (activeApp !== 'welcome') windowRef.current?.focus({ preventScroll: true })
+    if (activeApp !== 'welcome' && activeApp !== 'contact') windowRef.current?.focus({ preventScroll: true })
   }, [activeApp])
 
   useEffect(() => {
+    if (activeApp === 'welcome' || activeApp === 'contact') return
     const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose()
+      if (event.key === 'Escape' && !event.defaultPrevented && !document.pointerLockElement) onClose()
     }
 
     window.addEventListener('keydown', closeOnEscape)
     return () => window.removeEventListener('keydown', closeOnEscape)
-  }, [onClose])
+  }, [activeApp, onClose])
 
   if (activeApp === 'welcome') {
     return <Welcome onClose={onClose} />
+  }
+
+  if (activeApp === 'contact') {
+    return <Contact onClose={onClose} />
   }
 
   return (
@@ -81,7 +84,6 @@ export default function RoomOverlay({ activeApp, onClose }: Props) {
         <div className="room-overlay-content">
           {activeApp === 'projects' && <Projects embedded />}
           {activeApp === 'about' && <About embedded />}
-          {activeApp === 'contact' && <Contact embedded />}
         </div>
       </section>
     </div>

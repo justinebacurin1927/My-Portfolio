@@ -9,6 +9,9 @@ import {
 } from 'react-icons/fa6'
 import { projects } from '../data'
 import BlurImage from './BlurImage'
+import ArcadeIcon from './ArcadeIcon'
+import { arcadeTitles, type ArcadeGame } from '../games/catalog'
+import ArcadeWindow from './ArcadeWindow'
 
 const FEATURED_INDEX = Math.max(
   0,
@@ -34,12 +37,21 @@ export default function Projects({ embedded = false }: Props) {
   const [windowMaximized, setWindowMaximized] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(FEATURED_INDEX)
   const [tipIndex, setTipIndex] = useState(0)
+  const [arcadeGame, setArcadeGame] = useState<ArcadeGame | null>(null)
+  const [arcadeMinimized, setArcadeMinimized] = useState(false)
   const selected = projects[selectedIndex]
 
   const openFolder = () => {
+    if (arcadeGame) setArcadeMinimized(true)
     if (!folderOpen) setSelectedIndex(FEATURED_INDEX)
     setFolderOpen(true)
     setWindowMinimized(false)
+  }
+
+  const openGame = (game: ArcadeGame) => {
+    if (folderOpen) setWindowMinimized(true)
+    setArcadeGame(game)
+    setArcadeMinimized(false)
   }
 
   const closeWindow = () => {
@@ -77,9 +89,10 @@ export default function Projects({ embedded = false }: Props) {
             <div className="os-desktop-home">
               <div className="os-desktop-status" aria-hidden="true">
                 <span>JB_OS</span>
-                <span>DESKTOP // {projects.length} OBJECTS INDEXED</span>
+                <span>DESKTOP // {projects.length} PROJECTS · 2 GAMES</span>
               </div>
 
+              <div className="os-desktop-icons">
               <button
                 type="button"
                 onClick={openFolder}
@@ -94,6 +107,12 @@ export default function Projects({ embedded = false }: Props) {
                 <small>Folder · {projects.length} files</small>
                 <span className="os-open-prompt">[ CLICK TO OPEN ]</span>
               </button>
+              {(['snake', 'nightshift'] as ArcadeGame[]).map((game) => <button type="button" key={game} data-game={game} onClick={() => openGame(game)} className="os-folder-launcher os-game-launcher" aria-label={`Play ${arcadeTitles[game]}`}>
+                <span className="os-game-icon"><ArcadeIcon game={game} /></span>
+                <strong>{arcadeTitles[game].toUpperCase()}</strong>
+                <small>{game === 'snake' ? 'Chase the stars' : 'A retro maze shooter'}</small>
+              </button>)}
+              </div>
 
               <div className="os-desktop-help">
                 <button
@@ -269,6 +288,8 @@ export default function Projects({ embedded = false }: Props) {
             </div>
           )}
 
+          {arcadeGame && <ArcadeWindow key={arcadeGame} game={arcadeGame} minimized={arcadeMinimized} onMinimize={() => setArcadeMinimized(true)} onClose={() => { setArcadeGame(null); setArcadeMinimized(false) }} />}
+
           <div className="os-taskbar">
             <button type="button" className="os-start-button" onClick={openFolder}>
               <span className="os-start-mark" aria-hidden="true"><i /><i /><i /><i /></span>
@@ -285,11 +306,12 @@ export default function Projects({ embedded = false }: Props) {
                 className="os-task-button"
                 data-active={!windowMinimized}
                 aria-pressed={!windowMinimized}
-                onClick={() => setWindowMinimized((current) => !current)}
+                onClick={() => { if (windowMinimized && arcadeGame) setArcadeMinimized(true); setWindowMinimized((current) => !current) }}
               >
                 <FaFolderOpen aria-hidden="true" /> Projects
               </button>
             )}
+            {arcadeGame && <button type="button" className="os-task-button os-task-button--arcade" data-active={!arcadeMinimized} aria-pressed={!arcadeMinimized} onClick={() => { if (arcadeMinimized && folderOpen) setWindowMinimized(true); setArcadeMinimized((current) => !current) }}><ArcadeIcon game={arcadeGame} />{arcadeTitles[arcadeGame]}</button>}
             <div className="os-system-tray">
               <span aria-hidden="true" /> ONLINE
             </div>

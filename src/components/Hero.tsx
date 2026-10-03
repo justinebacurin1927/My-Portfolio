@@ -16,7 +16,7 @@ type Props = {
 const computerPath = 'M35 11H248V16H252V28H263V131H252V161H215V179H60V161H30V33H33V17H35Z M22 181H223L235 216L230 221H11L8 216Z'
 const moonPath = 'M28 6H36V11H42V16H47V20H50V24H53V41H51V47H47V51H42V55H38V59H14V55H27V51H32V47H37V41H42V21H38V16H37V14H32V11H27V7H28Z'
 const sunPath = 'M30 15H42V19H48V25H52V39H48V45H42V49H30V45H24V39H20V25H24V19H30Z M33 3H39V11H33Z M33 53H39V61H33Z M5 29H14V35H5Z M58 29H67V35H58Z M13 11H19V17H13Z M53 11H59V17H53Z M13 47H19V53H13Z M53 47H59V53H53Z'
-const mugPath = 'M6 5H55V14H66L74 22V49L66 57H56V65H6Z M56 23V49H65L68 45V27L65 23Z'
+const pencilHolderPath = 'M7 38H12V16H16V12H21V19H27V25H34V15H38V7H43V12H47V30H52V35H57V78H53V84H11V81H7Z'
 const catPortrait = {
   src: `${import.meta.env.BASE_URL}photos/orange-cat-frame-pixel.webp`,
   alt: 'Pixel portrait of an orange tabby cat with her tongue out and a raised paw',
@@ -127,16 +127,21 @@ export default function Hero({ onOpenApp, roomTheme, onToggleTheme }: Props) {
             <img className="room-cat-artwork" src={cuddlingCatsPortrait.src} alt={cuddlingCatsPortrait.alt} />
           </button>
 
-          <a href="#contact" onClick={(event) => openRoomApp(event, 'contact')} className="room-object-link room-contact-hotspot" aria-label="Open Contact from the desk mug">
-            <svg viewBox="0 0 80 72" aria-hidden="true">
-              <path className="room-object-halo" d={mugPath} />
-              <path className="room-object-outline" d={mugPath} />
+          <a href="#contact" onClick={(event) => openRoomApp(event, 'contact')} className="room-object-link room-contact-hotspot" aria-label="Write a letter from the pencil holder">
+            <svg viewBox="0 0 64 88" aria-hidden="true">
+              <path className="room-object-halo" d={pencilHolderPath} />
+              <path className="room-object-outline" d={pencilHolderPath} />
             </svg>
           </a>
         </div>
 
         <nav className="room-compact-controls" aria-label="Room controls">
           <a href="#about" onClick={(event) => openRoomApp(event, 'about')} className="room-compact-action">About me</a>
+          <a href="#contact" onClick={(event) => openRoomApp(event, 'contact')} className="room-compact-action room-compact-contact" aria-label="Write me a letter">
+            <svg viewBox="0 0 16 12" fill="none" shapeRendering="crispEdges" aria-hidden="true">
+              <path d="M1 1H15V11H1Z M2 2H4V4H6V6H10V4H12V2H14" stroke="currentColor" />
+            </svg>
+          </a>
           <button type="button" onClick={onToggleTheme} className="room-compact-action room-compact-theme" aria-label={themeAction}>
             <svg viewBox="0 0 72 72" aria-hidden="true"><path d={themePath} /></svg>
           </button>
