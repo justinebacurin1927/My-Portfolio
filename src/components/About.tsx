@@ -2,10 +2,14 @@ import { profile, skills } from '../data'
 import SkillsSolarSystem from './SkillsSolarSystem'
 import Section from './Section'
 
-export default function About() {
+type Props = {
+  embedded?: boolean
+}
+
+export default function About({ embedded = false }: Props) {
   return (
-    <Section id="about" className="max-w-6xl px-6 py-14 sm:px-12">
-      <div className="pixel-section-label mb-6">01 // ABOUT_ME</div>
+    <Section id="about" embedded={embedded} className="max-w-6xl px-6 py-14 sm:px-12">
+      <div className="pixel-section-label mb-6">02 // ABOUT_ME</div>
       <h2 className="mb-4 text-3xl font-bold uppercase text-white">About me</h2>
 
       <div className="grid items-center gap-12 md:grid-cols-2">

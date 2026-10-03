@@ -11,7 +11,11 @@ import { profile } from '../data'
 
 const FORMSPREE_URL = 'https://formspree.io/f/mjgqaeew'
 
-export default function Contact() {
+type Props = {
+  embedded?: boolean
+}
+
+export default function Contact({ embedded = false }: Props) {
   const [form, setForm] = useState({ name: '', email: '', message: '' })
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
 
@@ -39,7 +43,7 @@ export default function Contact() {
   }
 
   return (
-    <section id="contact" className="scroll-mt-20 px-4 py-10 sm:px-6 sm:py-16">
+    <section id="contact" className={embedded ? 'room-embedded-section' : 'scroll-mt-20 px-4 py-10 sm:px-6 sm:py-16'}>
       <div className="pixel-panel mx-auto max-w-6xl px-6 py-12 sm:px-12">
         <div className="pixel-section-label mb-6">03 // COMMS_TERMINAL</div>
         <div className="grid gap-12 md:grid-cols-2">

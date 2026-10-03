@@ -1,16 +1,19 @@
 import { useState, useEffect } from 'react'
 
 const links = [
-  { href: '#about', label: 'About' },
   { href: '#projects', label: 'Projects' },
+  { href: '#about', label: 'About' },
   { href: '#contact', label: 'Contact' },
-]
+] as const
+
+type NavTarget = (typeof links)[number]['href'] extends `#${infer Target}` ? Target : never
 
 type Props = {
   activeSection?: string
+  onNavigate?: (target: NavTarget) => void
 }
 
-export default function Navbar({ activeSection = '' }: Props) {
+export default function Navbar({ activeSection = '', onNavigate }: Props) {
   const [open, setOpen] = useState(false)
   const [progress, setProgress] = useState(0)
 
@@ -36,7 +39,7 @@ export default function Navbar({ activeSection = '' }: Props) {
       </div>
       <nav className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
         <a href="#" className="pixel-logo text-lg font-bold uppercase text-white">
-          <span className="text-cyan-300">&gt;</span> JB_PORTFOLIO
+          <span className="text-cyan-300">&gt;</span> JB_ROOM
           <span className="animate-pulse text-amber-300">_</span>
         </a>
 
@@ -48,6 +51,11 @@ export default function Navbar({ activeSection = '' }: Props) {
                 <a
                   href={link.href}
                   aria-current={isActive ? 'location' : undefined}
+                  onClick={(event) => {
+                    if (!onNavigate) return
+                    event.preventDefault()
+                    onNavigate(link.href.slice(1) as NavTarget)
+                  }}
                   className={`pixel-nav-link transition-colors hover:text-cyan-300 ${
                     isActive ? 'text-cyan-300' : 'text-slate-300'
                   }`}
@@ -89,7 +97,12 @@ export default function Navbar({ activeSection = '' }: Props) {
                   className={`block transition-colors hover:text-white ${
                     isActive ? 'text-white' : 'text-slate-300'
                   }`}
-                  onClick={() => setOpen(false)}
+                  onClick={(event) => {
+                    setOpen(false)
+                    if (!onNavigate) return
+                    event.preventDefault()
+                    onNavigate(link.href.slice(1) as NavTarget)
+                  }}
                 >
                   {link.label}
                 </a>
