@@ -1,15 +1,17 @@
 import { useEffect, useRef, type CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
 
-type Props = {
+export type RoomPhoto = {
   src: string
   alt: string
   label: string
   aspectRatio: number
-  onClose: () => void
+  caption?: string
 }
 
-export default function RoomPhotoViewer({ src, alt, label, aspectRatio, onClose }: Props) {
+type Props = RoomPhoto & { onClose: () => void }
+
+export default function RoomPhotoViewer({ src, alt, label, aspectRatio, caption, onClose }: Props) {
   const dialogRef = useRef<HTMLDialogElement>(null)
 
   useEffect(() => {
@@ -31,6 +33,7 @@ export default function RoomPhotoViewer({ src, alt, label, aspectRatio, onClose 
       ref={dialogRef}
       className="room-photo-viewer"
       aria-label={label}
+      data-has-caption={Boolean(caption)}
       style={{ '--room-photo-ratio': aspectRatio } as CSSProperties}
       onCancel={(event) => {
         event.preventDefault()
@@ -45,6 +48,7 @@ export default function RoomPhotoViewer({ src, alt, label, aspectRatio, onClose 
       </button>
       <figure className="room-photo-frame">
         <img src={src} alt={alt} />
+        {caption && <figcaption className="room-photo-caption">{caption}</figcaption>}
       </figure>
     </dialog>,
     document.body,

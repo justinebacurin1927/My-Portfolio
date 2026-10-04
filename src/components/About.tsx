@@ -1,6 +1,7 @@
 import { profile, skills } from '../data'
 import SkillsSolarSystem from './SkillsSolarSystem'
 import Section from './Section'
+import ArkoIcon from './ArkoIcon'
 
 type Props = {
   embedded?: boolean
@@ -16,6 +17,16 @@ export default function About({ embedded = false }: Props) {
         {/* Left: about text + tech stack chips */}
         <div>
           <p className="text-slate-400">{profile.about}</p>
+
+          <a href={profile.studio.teamUrl} target="_blank" rel="noopener noreferrer" className="about-studio-link">
+            <ArkoIcon />
+            <span>
+              <small>MY TEAM</small>
+              <strong>{profile.studio.name}</strong>
+              <span>I'm part of the team designing, building, and shipping together.</span>
+            </span>
+            <span className="about-studio-arrow" aria-hidden="true">↗</span>
+          </a>
 
           <h3 className="mt-8 mb-4 text-sm font-semibold uppercase tracking-wide text-slate-300">
             Tech Stack

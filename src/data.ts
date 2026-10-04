@@ -14,6 +14,12 @@ export const profile = {
   photo: `${import.meta.env.BASE_URL}photos/new.jpeg`,
   pixelPhoto: `${import.meta.env.BASE_URL}photos/profile-pixel.webp`,
   githubJoinedAt: '2025-09-10',
+  studio: {
+    name: 'ARKO Software Studio',
+    url: 'https://arkodevph.com/',
+    teamUrl: 'https://arkodevph.com/#team',
+    logo: `${import.meta.env.BASE_URL}brand/arko-icon.png`,
+  },
   socials: {
     github: 'https://github.com/justinebacurin1927',
     facebook: 'https://www.facebook.com/share/18ZymD7Dop/',
@@ -81,7 +87,7 @@ export const projects: Project[] = [
       'ARKO is a Philippine software studio with a public site showcasing its services, selected projects, blog, team, and client inquiry flow. Its private member workspace brings together tasks, finance, documents, messages, resources, workflows, and an AI assistant. The current platform uses Next.js, React, TypeScript, and PostgreSQL.',
     image: `${import.meta.env.BASE_URL}projects/arko-studio-home.png`,
     tags: ['Next.js', 'React', 'TypeScript', 'PostgreSQL', 'Full-Stack'],
-    link: 'https://arkodevph.com/',
+    link: profile.studio.url,
     linkLabel: 'Visit ARKO',
   },
   {
@@ -200,7 +206,7 @@ export const projects: Project[] = [
 ]
 
 export type ConversationTopic = {
-  id: 'about' | 'skills' | 'projects' | 'contact'
+  id: 'about' | 'arko' | 'skills' | 'projects' | 'contact'
   question: string
   replies: string[]
 }
@@ -215,7 +221,17 @@ export const welcomeConversation: { greeting: string; invitation: string; topics
       replies: [
         "I'm a Bachelor of Science in Information Technology graduate, growing as a software and web developer.",
         "I enjoy turning practical ideas into working products. That can mean building an interface, connecting an API, or working with a database.",
+        `I'm also part of ${profile.studio.name}, where we design, build, and ship together.`,
         "I'm always exploring and learning as I build. You can find more about my background and skills in the About section.",
+      ],
+    },
+    {
+      id: 'arko',
+      question: 'What is ARKO?',
+      replies: [
+        `I'm part of ${profile.studio.name}, a small software team based in the Philippines.`,
+        'We design and build websites, mobile apps, automation, and AI features, working together from the first idea to launch.',
+        "You'll find me on our team page as Justine Cane. Open the ARKO icon on my desktop to visit the studio.",
       ],
     },
     {

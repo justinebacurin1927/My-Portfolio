@@ -1,8 +1,9 @@
 import { useEffect, useState, type MouseEvent } from 'react'
 import { profile } from '../data'
 import RoomPets from './RoomPets'
-import RoomPhotoViewer from './RoomPhotoViewer'
+import RoomPhotoViewer, { type RoomPhoto } from './RoomPhotoViewer'
 import PixelCalendarIcon from './PixelCalendarIcon'
+import RoomDaylight from './RoomDaylight'
 
 type RoomTarget = 'welcome' | 'projects' | 'about' | 'contact' | 'calendar'
 
@@ -20,15 +21,23 @@ const sunPath = 'M30 15H42V19H48V25H52V39H48V45H42V49H30V45H24V39H20V25H24V19H30
 const pencilHolderPath = 'M7 38H12V16H16V12H21V19H27V25H34V15H38V7H43V12H47V30H52V35H57V78H53V84H11V81H7Z'
 const catPortrait = {
   src: `${import.meta.env.BASE_URL}photos/orange-cat-frame-pixel.webp`,
-  alt: 'Pixel portrait of an orange tabby cat with her tongue out and a raised paw',
-  label: 'Orange cat portrait',
+  alt: 'Pixel portrait of Orange, an orange tabby cat with her tongue out and a raised paw',
+  label: 'Orange portrait',
+  caption: 'Orange',
   aspectRatio: 2 / 3,
 }
 const cuddlingCatsPortrait = {
   src: `${import.meta.env.BASE_URL}photos/cuddling-cats-frame-pixel.webp`,
-  alt: 'Pixel portrait of an orange cat sleeping with her arm around a gray tabby cat',
-  label: 'Cuddling cats portrait',
+  alt: 'Pixel portrait of Orange sleeping with her arm around Zoro, a gray tabby cat',
+  label: 'Orange and Zoro portrait',
+  caption: 'Orange & Zoro',
   aspectRatio: 1,
+}
+const arkoPortrait = {
+  src: `${import.meta.env.BASE_URL}brand/arko-frame-pixel-wall.png`,
+  alt: 'Pixel-art ARKO logo in lime and black on a dark purple background',
+  label: 'ARKO logo portrait',
+  aspectRatio: 1122 / 1402,
 }
 const skyPanes = [
   { position: 'left-first', stars: [[27, 24, 0], [68, 58, -1.7], [87, 33, -3.2]], comet: false },
@@ -45,7 +54,7 @@ const roomClock = new Intl.DateTimeFormat('en-PH', {
 
 export default function Hero({ onOpenApp, roomTheme, onToggleTheme }: Props) {
   const [roomTime, setRoomTime] = useState(() => roomClock.format(new Date()).toUpperCase())
-  const [selectedPhoto, setSelectedPhoto] = useState<typeof catPortrait | null>(null)
+  const [selectedPhoto, setSelectedPhoto] = useState<RoomPhoto | null>(null)
   const themeAction = roomTheme === 'night' ? 'Switch to day' : 'Switch to night'
   const themePath = roomTheme === 'night' ? moonPath : sunPath
 
@@ -77,7 +86,7 @@ export default function Hero({ onOpenApp, roomTheme, onToggleTheme }: Props) {
     <section className="pixel-room-hero" aria-label="Justine's pixel developer room">
       <div className="pixel-room-scene">
         <div className="room-scene-art">
-          <div className="room-window-effects" aria-hidden="true">
+          <div className="room-window-effects room-window-effects--night" aria-hidden="true">
             {skyPanes.map(({ position, stars, comet }) => (
               <div className={`room-window-pane room-window-pane--${position}`} key={position}>
                 {stars.map(([left, top, delay]) => (
@@ -91,6 +100,7 @@ export default function Hero({ onOpenApp, roomTheme, onToggleTheme }: Props) {
               </div>
             ))}
           </div>
+          <RoomDaylight />
           <a href="#projects" onClick={(event) => openRoomApp(event, 'projects')} className="room-object-link room-computer-hotspot" aria-label="Open Projects on the room computer">
             <svg viewBox="0 0 280 230" aria-hidden="true">
               <path className="room-object-outline" d={computerPath} />
@@ -113,7 +123,7 @@ export default function Hero({ onOpenApp, roomTheme, onToggleTheme }: Props) {
           <button
             className="room-cat-frame"
             type="button"
-            aria-label="View orange cat portrait full screen"
+            aria-label="View Orange portrait full screen"
             onClick={() => setSelectedPhoto(catPortrait)}
           >
             <img className="room-cat-artwork" src={catPortrait.src} alt={catPortrait.alt} />
@@ -122,10 +132,19 @@ export default function Hero({ onOpenApp, roomTheme, onToggleTheme }: Props) {
           <button
             className="room-cat-frame room-cat-frame--cuddling"
             type="button"
-            aria-label="View cuddling cats portrait full screen"
+            aria-label="View Orange and Zoro portrait full screen"
             onClick={() => setSelectedPhoto(cuddlingCatsPortrait)}
           >
             <img className="room-cat-artwork" src={cuddlingCatsPortrait.src} alt={cuddlingCatsPortrait.alt} />
+          </button>
+
+          <button
+            type="button"
+            className="room-studio-frame"
+            aria-label="View ARKO logo portrait full screen"
+            onClick={() => setSelectedPhoto(arkoPortrait)}
+          >
+            <img className="room-studio-artwork" src={arkoPortrait.src} alt={arkoPortrait.alt} />
           </button>
 
           <a href="#contact" onClick={(event) => openRoomApp(event, 'contact')} className="room-object-link room-contact-hotspot" aria-label="Write a letter from the pencil holder">

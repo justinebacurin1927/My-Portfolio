@@ -12,6 +12,16 @@ const PET_IMAGES = {
   pantherBack: `${import.meta.env.BASE_URL}pets/panther-walk-back-natural.webp`,
 }
 
+function PetShadow() {
+  return (
+    <svg className="room-pet-shadow" viewBox="0 0 100 24" preserveAspectRatio="none" shapeRendering="crispEdges" aria-hidden="true" focusable="false">
+      <path d="M14 3H78V5H90V8H98V15H90V19H78V21H14V19H6V16H0V9H6V6H14Z" opacity="0.2" />
+      <path d="M20 6H76V8H86V10H92V15H82V18H20V16H10V10H20Z" opacity="0.3" />
+      <path d="M26 9H70V10H80V14H72V16H24V14H16V11H26Z" opacity="0.5" />
+    </svg>
+  )
+}
+
 export default function RoomPets() {
   const [chopperAwake, setChopperAwake] = useState(false)
   const [pantherState, setPantherState] = useState<PantherState>('watching')
@@ -81,7 +91,9 @@ export default function RoomPets() {
           if (!chopperAwake) setChopperAwake(true)
         }}
       >
+        <PetShadow />
         <span className="room-pet-sprite" aria-hidden="true" />
+        <span className="room-pet-name" aria-hidden="true">Chopper</span>
         {!chopperAwake && (
           <span className="room-pet-sleep-cloud" aria-hidden="true">
             <svg viewBox="0 0 96 64" shapeRendering="crispEdges">
@@ -108,7 +120,9 @@ export default function RoomPets() {
           '--panther-travel-time': `${reducedMotion ? 0 : PANTHER_TRAVEL_MS}ms`,
         } as CSSProperties}
       >
+        <PetShadow />
         <span className="room-pet-sprite" aria-hidden="true" />
+        <span className="room-pet-name" aria-hidden="true">Panther</span>
         {(pantherState === 'watching' || pantherState === 'leaving') && (
           <svg className="room-pet-nose-detail" viewBox="0 0 6 10" shapeRendering="crispEdges" aria-hidden="true">
             <path fill="#708253" d="M0 0H4V2H6V8H4V10H0V8H2V6H0Z" />

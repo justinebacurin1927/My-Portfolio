@@ -16,5 +16,6 @@ export default function PixelCalendarIcon() {
     <text x="30" y="21" textAnchor="middle" fill="#f2e7cc" fontFamily="Pixelify Sans Variable, monospace" fontSize="10">{month}</text>
     <text x="30" y="49" textAnchor="middle" fill="#3e3b42" fontFamily="Pixelify Sans Variable, monospace" fontSize="23">{Number(date.slice(8))}</text>
     {[0, 1, 2, 3, 4, 5, 6].map((column) => <rect key={column} x={10 + column * 6} y="55" width="4" height="4" fill={['#c6c5a9', '#789467', '#4c7955', '#315b49', '#779666', '#c6c5a9', '#aac191'][column]} />)}
+    <path className="room-calendar-outline" d="M4 5H13V1H19V5H41V1H47V5H56V9H60V67H56V71H4V67H0V9H4Z" />
   </svg>
 }

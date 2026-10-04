@@ -446,7 +446,10 @@ select {
   transition: opacity 600ms ease;
 }
 
-.pixel-app[data-room-theme="day"] .room-window-effects { opacity: 0; }
+.room-window-effects--day { opacity: 0; }
+.pixel-app[data-room-theme="day"] .room-window-effects--night { opacity: 0; }
+.pixel-app[data-room-theme="day"] .room-window-effects--day { opacity: 1; }
+.pixel-app[data-room-theme="day"] :is(.room-sky-star, .room-sky-comet) { animation-play-state: paused; }
 
 .room-compact-controls { display: none; }
 
@@ -541,6 +544,63 @@ select {
   70%, 100% { opacity: 0; transform: translate(170px, 69px); }
 }
 
+.room-day-window {
+  position: absolute;
+  top: 14.746%;
+  height: 30.664%;
+  overflow: hidden;
+}
+
+.room-day-window--left { left: 26.172%; width: 18.359%; }
+.room-day-window--right { left: 55.599%; width: 19.336%; }
+
+.room-day-leaf {
+  opacity: 0;
+  animation: room-leaf-blow 8s steps(48, end) infinite;
+  animation-play-state: paused;
+}
+
+.room-day-leaf-turn {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: room-leaf-flutter 2.4s steps(6, end) infinite alternate;
+  animation-play-state: paused;
+}
+
+.room-day-leaf:nth-of-type(even) .room-day-leaf-turn { animation-direction: alternate-reverse; }
+
+.room-day-gust {
+  fill: none;
+  stroke: #fff3cf;
+  stroke-width: 1;
+  opacity: 0;
+  animation: room-wind-pass 7s steps(48, end) infinite;
+  animation-play-state: paused;
+}
+
+.pixel-app[data-room-theme="day"] :is(.room-day-leaf, .room-day-leaf-turn, .room-day-gust) { animation-play-state: running; }
+
+@keyframes room-leaf-blow {
+  0% { opacity: 0; transform: translate(-24px, var(--leaf-y)); }
+  10% { opacity: 1; transform: translate(10px, calc(var(--leaf-y) - 8px)); }
+  35% { transform: translate(calc(var(--window-width) * 0.3), calc(var(--leaf-y) + 14px)); }
+  65% { transform: translate(calc(var(--window-width) * 0.65), calc(var(--leaf-y) - 12px)); }
+  90% { opacity: 1; transform: translate(var(--window-width), calc(var(--leaf-y) + 8px)); }
+  100% { opacity: 0; transform: translate(calc(var(--window-width) + 24px), var(--leaf-y)); }
+}
+
+@keyframes room-leaf-flutter {
+  from { transform: rotate(-12deg) scaleY(0.7); }
+  to { transform: rotate(32deg) scaleY(1); }
+}
+
+@keyframes room-wind-pass {
+  0%, 12% { opacity: 0; transform: translate(-90px, var(--gust-y)); }
+  28% { opacity: 0.5; }
+  58% { opacity: 0.35; }
+  78%, 100% { opacity: 0; transform: translate(calc(var(--window-width) + 12px), calc(var(--gust-y) - 10px)); }
+}
+
 .room-object-link {
   --hotspot-color: #8be9fd;
   position: absolute;
@@ -614,16 +674,20 @@ select {
   width: 6.25%;
   height: 10.742%;
   filter: brightness(0.72) drop-shadow(4px 5px 0 rgba(3, 4, 17, 0.35));
-  transition: filter 600ms ease, transform 120ms steps(2, end);
+  transition: filter 600ms ease;
 }
 
 .pixel-app[data-room-theme="day"] .room-calendar-hotspot { filter: brightness(1) drop-shadow(4px 5px 0 rgba(40, 24, 30, 0.3)); }
-.room-calendar-hotspot:hover,
-.room-calendar-hotspot:focus-visible {
-  outline: 3px solid #8be9fd;
-  outline-offset: 2px;
-  transform: translateY(-2px);
+.room-calendar-outline {
+  fill: none;
+  stroke: #8be9fd;
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+  opacity: 0;
+  transition: opacity 120ms steps(3, end);
 }
+
+.room-calendar-hotspot:is(:hover, :focus-visible, :active) .room-calendar-outline { opacity: 1; }
 
 .room-theme-hotspot {
   --hotspot-color: #f8d486;
@@ -645,11 +709,14 @@ select {
 .room-theme-hotspot:active .room-object-outline { stroke-width: 3; }
 
 .room-about-hotspot {
+  --frame-left: 8.140%;
+  --frame-top: 11.392%;
+  --frame-width: 84.884%;
+  --frame-height: 79.747%;
   top: 24.902%;
   left: 15.951%;
   width: 5.599%;
   height: 7.715%;
-  transition: transform 120ms steps(2, end), box-shadow 120ms steps(2, end);
 }
 
 .room-about-picture {
@@ -685,6 +752,10 @@ select {
 .pixel-app[data-room-theme="day"] .room-about-artwork { filter: brightness(1); }
 
 .room-cat-frame {
+  --frame-left: 9.722%;
+  --frame-top: 7.778%;
+  --frame-width: 72.222%;
+  --frame-height: 83.333%;
   position: absolute;
   top: 19.141%;
   left: 9.245%;
@@ -696,14 +767,35 @@ select {
   pointer-events: auto;
 }
 
-.room-cat-frame:hover,
-.room-cat-frame:focus-visible {
-  outline: 3px solid #8be9fd;
-  outline-offset: 1px;
-  box-shadow: 0 0 14px rgba(139, 233, 253, 0.65);
+/* Trace the painted frame, while keeping the larger click area. */
+:is(.room-cat-frame, .room-studio-frame, .room-about-hotspot)::after {
+  position: absolute;
+  top: var(--frame-top);
+  left: var(--frame-left);
+  width: var(--frame-width);
+  height: var(--frame-height);
+  box-sizing: border-box;
+  pointer-events: none;
+  content: "";
+  border: 2px solid #8be9fd;
+  box-shadow: 0 0 8px rgba(139, 233, 253, 0.55);
+  opacity: 0;
+  transition: opacity 120ms steps(3, end);
+}
+
+:is(.room-cat-frame, .room-studio-frame, .room-about-hotspot):is(:hover, :focus-visible, :active) {
+  outline: none;
+}
+
+:is(.room-cat-frame, .room-studio-frame, .room-about-hotspot):is(:hover, :focus-visible, :active)::after {
+  opacity: 1;
 }
 
 .room-cat-frame--cuddling {
+  --frame-left: 8.571%;
+  --frame-top: 9.459%;
+  --frame-width: 75.714%;
+  --frame-height: 77.027%;
   top: 16.406%;
   left: 16.016%;
   width: 4.557%;
@@ -726,6 +818,28 @@ select {
 
 .pixel-app[data-room-theme="day"] .room-cat-artwork { filter: brightness(1); }
 
+.room-pet-name {
+  position: absolute;
+  z-index: 3;
+  width: max-content;
+  padding: 2px 6px;
+  pointer-events: none;
+  color: #fff1df;
+  background: #241b35;
+  border: 2px solid #796383;
+  box-shadow: 2px 2px 0 rgba(3, 4, 17, 0.5);
+  font-family: "Pixelify Sans Variable", ui-monospace, monospace;
+  font-size: clamp(12px, 0.85vw, 15px);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.pixel-app[data-room-theme="day"] .room-pet-name {
+  color: #42303a;
+  background: #f3dfbd;
+  border-color: #93705d;
+}
+
 .room-cat-frame--cuddling .room-cat-artwork {
   top: 18.919%;
   left: 17.143%;
@@ -733,7 +847,39 @@ select {
   height: 60.811%;
 }
 
+.room-studio-frame {
+  --frame-left: 8.333%;
+  --frame-top: 8.571%;
+  --frame-width: 78.333%;
+  --frame-height: 81.429%;
+  position: absolute;
+  top: 42.188%;
+  left: 14.128%;
+  width: 3.906%;
+  height: 6.836%;
+  padding: 0;
+  border: 0;
+  background: none;
+  pointer-events: auto;
+}
+
+.room-studio-artwork {
+  position: absolute;
+  top: 14.286%;
+  left: 16.667%;
+  width: 65%;
+  height: 70%;
+  object-fit: cover;
+  image-rendering: pixelated;
+  pointer-events: none;
+  filter: brightness(0.76) saturate(0.82);
+  transition: filter 600ms ease;
+}
+
+.pixel-app[data-room-theme="day"] .room-studio-artwork { filter: brightness(1); }
+
 .room-photo-viewer {
+  --room-photo-caption-space: 0px;
   position: fixed;
   inset: 0;
   width: 100vw;
@@ -749,10 +895,11 @@ select {
 }
 
 .room-photo-viewer[open] { display: grid; place-items: center; }
+.room-photo-viewer[data-has-caption="true"] { --room-photo-caption-space: 44px; }
 .room-photo-viewer::backdrop { background: rgba(3, 4, 16, 0.85); }
 
 .room-photo-frame {
-  width: min(680px, 92vw, calc((100svh - 96px) * var(--room-photo-ratio, 0.666667)));
+  width: min(680px, 92vw, calc((100svh - 96px - var(--room-photo-caption-space)) * var(--room-photo-ratio, 0.666667)));
   margin: 0;
   padding: clamp(8px, 1.8vmin, 16px);
   background: #696078;
@@ -767,6 +914,18 @@ select {
   object-fit: contain;
   image-rendering: pixelated;
   border: 3px solid #160d20;
+}
+
+.room-photo-caption {
+  width: fit-content;
+  margin: 10px auto 0;
+  padding: 4px 10px;
+  color: #fff1df;
+  background: #241b35;
+  border: 2px solid #ada2ba;
+  font-family: "Pixelify Sans Variable", ui-monospace, monospace;
+  font-size: clamp(1rem, 2.5vmin, 1.25rem);
+  line-height: 1;
 }
 
 .room-photo-close {
@@ -789,14 +948,6 @@ select {
   outline: 2px solid #8be9fd;
   outline-offset: 2px;
   border-color: #8be9fd;
-}
-
-.room-about-hotspot:hover,
-.room-about-hotspot:focus-visible {
-  outline: 3px solid var(--hotspot-color);
-  outline-offset: 1px;
-  box-shadow: 0 0 14px rgba(139, 233, 253, 0.65);
-  transform: translateY(-3px) scale(1.04);
 }
 
 .room-wall-profile-frame {
@@ -1137,11 +1288,53 @@ select {
   border: 0;
   background: none;
   pointer-events: auto;
+  isolation: isolate;
 }
 
 .room-pet:focus-visible { outline: 2px solid #8be9fd; outline-offset: -10px; }
 
+.room-pet-name {
+  bottom: 88%;
+  left: 58%;
+  transform: translateX(-50%);
+}
+
+.room-pet--chopper .room-pet-name { bottom: 66%; left: 72%; }
+.room-pet--panther:not([data-state="watching"]) .room-pet-name { visibility: hidden; }
+
+.room-pet-shadow {
+  position: absolute;
+  top: 83%;
+  left: 4%;
+  z-index: 0;
+  width: 90%;
+  height: 11%;
+  overflow: visible;
+  pointer-events: none;
+  fill: #160d27;
+  opacity: 0.75;
+  transform-origin: center;
+  transition: fill 600ms ease, opacity 600ms ease, transform 600ms ease;
+}
+
+.pixel-app[data-room-theme="day"] .room-pet-shadow {
+  fill: #352032;
+  opacity: 1;
+  transform: translateX(4%) scaleX(1.08);
+}
+
+.room-pet--chopper .room-pet-shadow { left: -3%; width: 106%; height: 12%; }
+
+.room-pet--panther:is([data-state="leaving"], [data-state="returning"]) .room-pet-shadow {
+  top: 88%;
+  left: 20%;
+  width: 68%;
+  height: 12%;
+}
+
 .room-pet-sprite {
+  position: relative;
+  z-index: 1;
   display: block;
   width: 100%;
   height: 100%;
@@ -1167,6 +1360,7 @@ select {
 
 .room-pet-sleep-cloud {
   position: absolute;
+  z-index: 2;
   bottom: 65%;
   left: 6%;
   width: clamp(64px, 30%, 88px);
@@ -1219,6 +1413,7 @@ select {
 
 .room-pet-nose-detail {
   position: absolute;
+  z-index: 2;
   left: 80.8%;
   top: 28.8%;
   width: clamp(3px, 2.8%, 5px);
@@ -1893,6 +2088,29 @@ select {
 }
 
 /* Project interface */
+
+.about-studio-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
+  padding: 14px;
+  color: #eae4f1;
+  background: #1b122a;
+  border: 2px solid #655079;
+  box-shadow: 4px 4px 0 #090713;
+}
+
+.about-studio-link > svg { width: 56px; height: 56px; flex: none; }
+.about-studio-link > span:first-of-type { display: grid; min-width: 0; gap: 4px; }
+.about-studio-link small { color: #c5fa3d; font-size: 0.7rem; letter-spacing: 0.12em; }
+.about-studio-link strong { color: #fff7e6; font-size: 1rem; }
+.about-studio-link small,
+.about-studio-link strong { font-family: "Pixelify Sans Variable", ui-monospace, monospace; }
+.about-studio-link > span > span { color: #c1b4d2; font-size: 0.85rem; line-height: 1.5; }
+.about-studio-arrow { margin-left: auto; color: #c5fa3d; font-size: 1.4rem; }
+.about-studio-link:hover,
+.about-studio-link:focus-visible { border-color: #c5fa3d; outline: 2px solid #c5fa3d; outline-offset: 3px; }
 
 .os-desktop {
   --os-wallpaper: none;
@@ -2680,9 +2898,14 @@ select {
   top: 64px;
   left: clamp(16px, 4%, 52px);
   display: grid;
-  width: min(1000px, calc(100% - 32px));
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  width: min(1120px, calc(100% - 32px));
+  max-height: calc(100% - 240px);
+  overflow-y: auto;
+  padding: 4px 8px 8px 4px;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  align-content: start;
   gap: 12px;
+  scrollbar-color: #8f7ac5 #1b1533;
 }
 
 .os-desktop-icons > .os-folder-launcher { position: static; width: 100%; }
@@ -2691,7 +2914,9 @@ select {
 .os-game-launcher:hover .os-game-icon,
 .os-game-launcher:focus-visible .os-game-icon,
 .os-social-launcher:hover .os-game-icon,
-.os-social-launcher:focus-visible .os-game-icon { transform: translateY(-4px); }
+.os-social-launcher:focus-visible .os-game-icon,
+.os-studio-launcher:hover .os-game-icon,
+.os-studio-launcher:focus-visible .os-game-icon { transform: translateY(-4px); }
 
 .os-arcade-window {
   position: absolute;
@@ -2810,7 +3035,7 @@ select {
 .tinycraft-touch-hint { display: none; }
 
 @media (max-width: 720px) {
-  .os-desktop-icons { grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: 480px; gap: 4px 8px; }
+  .os-desktop-icons { grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: 480px; max-height: calc(100% - 200px); gap: 4px 8px; }
   .os-desktop-icons > .os-folder-launcher { min-height: 130px; padding-top: 4px; padding-bottom: 4px; }
   .os-desktop-icons .os-open-prompt { display: none; }
   .os-desktop-home .os-desktop-help { right: 14px; bottom: 64px; width: min(235px, calc(100% - 72px)); padding: 8px 12px; }
@@ -2870,7 +3095,7 @@ select {
 }
 
 @media (max-height: 500px) and (min-width: 721px) {
-  .os-desktop-icons { top: 42px; width: min(560px, calc(100% - 270px)); grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px 12px; }
+  .os-desktop-icons { top: 42px; width: min(560px, calc(100% - 270px)); max-height: calc(100% - 114px); grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px 12px; }
   .os-desktop-icons > .os-folder-launcher { padding: 4px 3px; }
   .os-desktop-icons .os-game-icon > svg { width: 48px; height: 48px; }
   .os-desktop-icons .os-folder-icon > svg { width: 56px; height: 48px; }
@@ -3808,6 +4033,8 @@ select {
   .room-object-link,
   .room-object-halo,
   .room-object-outline,
+  .room-calendar-outline,
+  :is(.room-cat-frame, .room-studio-frame, .room-about-hotspot)::after,
   .room-wall-profile-frame,
   .pixel-room-scene::before,
   .pixel-room-scene::after,
@@ -3815,9 +4042,12 @@ select {
   .room-about-picture,
   .room-about-artwork,
   .room-cat-artwork,
+  .room-studio-artwork,
   .room-pets,
+  .room-pet-shadow,
   .room-pet--panther { transition: none; }
   .room-pet-sprite,
   .room-pet-sleep-cloud { animation: none !important; }
+  .room-window-effects--day { display: none; }
   .scroll-reveal, .scroll-reveal.is-visible { opacity: 1; transform: none; transition: none; }
 }

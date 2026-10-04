@@ -13,6 +13,7 @@ import ArcadeIcon from './ArcadeIcon'
 import { arcadeGames, arcadeTitles, type ArcadeGame } from '../games/catalog'
 import ArcadeWindow from './ArcadeWindow'
 import SocialIcon, { type SocialNetwork } from './SocialIcon'
+import ArkoIcon from './ArkoIcon'
 
 const FEATURED_INDEX = Math.max(
   0,
@@ -119,6 +120,10 @@ export default function Projects({ embedded = false }: Props) {
                 <span className="os-game-icon"><SocialIcon network={network} /></span>
                 <strong>{name.toUpperCase()}</strong>
               </a>)}
+              <a href={profile.studio.url} target="_blank" rel="noopener noreferrer" className="os-folder-launcher os-studio-launcher" aria-label="Open ARKO Software Studio in a new tab">
+                <span className="os-game-icon"><ArkoIcon /></span>
+                <strong>ARKO</strong>
+              </a>
               </div>
 
               <div className="os-desktop-help">
