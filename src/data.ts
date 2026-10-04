@@ -13,9 +13,11 @@ export const profile = {
   // Put a photo in /public (e.g. /me.jpg) and set it here to replace the placeholder.
   photo: `${import.meta.env.BASE_URL}photos/new.jpeg`,
   pixelPhoto: `${import.meta.env.BASE_URL}photos/profile-pixel.webp`,
+  githubJoinedAt: '2025-09-10',
   socials: {
     github: 'https://github.com/justinebacurin1927',
-    linkedin: 'https://www.linkedin.com/in/justine-bacurin',
+    facebook: 'https://www.facebook.com/share/18ZymD7Dop/',
+    linkedin: 'https://www.linkedin.com/in/justine-cane-bacurin-5bb904432/',
   },
 }
 
@@ -47,6 +49,8 @@ export type Project = {
   // Put images in /public/projects/ and reference them like '/projects/one.png'.
   // Leave undefined to show a colored gradient placeholder instead.
   image?: string
+  // Use the screenshot's width / height to preserve the complete frame.
+  imageAspectRatio?: number
   link?: string
   linkLabel?: string
   // Keeps a future demo URL on record while showing a non-clickable placeholder.
@@ -105,6 +109,33 @@ export const projects: Project[] = [
     tags: ['HTML', 'CSS', 'JavaScript', 'Responsive Design'],
     link: 'https://scarborough-real-estate.vercel.app/',
     linkLabel: 'Visit Scarborough site',
+  },
+  {
+    title: 'RM Internet Services',
+    fileName: 'rm-internet-services.web',
+    fileType: 'WEB',
+    description:
+      'A responsive internet service provider website with an animated neighborhood illustration, service information, FAQs, and a Facebook inquiry flow.',
+    overview:
+      'A website for RM Internet Services in Capas, Tarlac, built with React, Vite, and Tailwind CSS. Visitors can explore everyday uses for their connection, read FAQs, and prepare an inquiry about coverage and plans to send through Facebook. The site features custom isometric SVG illustrations, a cable connection loader, scroll animations, and responsive layouts with reduced-motion support.',
+    image: `${import.meta.env.BASE_URL}projects/rm-internet-website.png`,
+    imageAspectRatio: 8 / 5,
+    tags: ['React', 'JavaScript', 'Vite', 'Tailwind CSS', 'SVG Animation'],
+    link: 'https://rm-internet-website.vercel.app/',
+    linkLabel: 'Visit RM Internet',
+  },
+  {
+    title: 'The Margin — 2D Survival Game',
+    fileName: 'the-margin-2d.game',
+    fileType: 'GAME',
+    description:
+      'A turn-based 2D survival roguelike built with Java and libGDX, combining forest exploration, weather, combat, and companions.',
+    overview:
+      'A Java 17 and libGDX desktop game following Klein, a stranded knight trying to cross the occupied Herois forest. Turn-based exploration brings together hunger, thirst, temperature, day/night, weather, stealth, combat, weapon durability, and companion survival. The playable build includes the opening story, tutorial, and journal; the larger story and trading systems are still in development.',
+    image: `${import.meta.env.BASE_URL}projects/the-margin-2d.png`,
+    imageAspectRatio: 3 / 2,
+    tags: ['Java 17', 'libGDX', 'LWJGL3', 'Maven', 'Game Development'],
+    demoStatus: 'Desktop game · In development',
   },
   {
     title: 'Fresh Phones PH',
@@ -200,8 +231,8 @@ export const welcomeConversation: { greeting: string; invitation: string; topics
       id: 'projects',
       question: 'Show me your projects',
       replies: [
-        `There are ${projects.length} projects in my desktop folder, covering websites, full-stack systems, C++ graphics, and a collaborative AI research project.`,
-        'You can explore the Scarborough Real Estate concept, Yuenansichu Restaurant, ARKO, Fresh Phones PH, Huntly, and more.',
+        `There are ${projects.length} projects in my desktop folder, covering websites, full-stack systems, a 2D survival game, C++ graphics, and a collaborative AI research project.`,
+        'You can explore RM Internet Services, The Margin, the Scarborough Real Estate concept, Yuenansichu Restaurant, ARKO, and more.',
         'Open a project file to see its screenshot, what it does, and the tools behind it. Live sites and source links are included where available.',
       ],
     },

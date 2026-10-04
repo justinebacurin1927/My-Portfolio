@@ -2,8 +2,9 @@ import { useEffect, useState, type MouseEvent } from 'react'
 import { profile } from '../data'
 import RoomPets from './RoomPets'
 import RoomPhotoViewer from './RoomPhotoViewer'
+import PixelCalendarIcon from './PixelCalendarIcon'
 
-type RoomTarget = 'welcome' | 'projects' | 'about' | 'contact'
+type RoomTarget = 'welcome' | 'projects' | 'about' | 'contact' | 'calendar'
 
 export type RoomTheme = 'night' | 'day'
 
@@ -106,7 +107,7 @@ export default function Hero({ onOpenApp, roomTheme, onToggleTheme }: Props) {
           <a href="#about" onClick={(event) => openRoomApp(event, 'about')} className="room-object-link room-about-hotspot" aria-label="Open About me from the wall picture frame">
             <span className="room-about-picture room-about-picture--night" aria-hidden="true" />
             <span className="room-about-picture room-about-picture--day" aria-hidden="true" />
-            <img className="room-about-artwork" src={`${import.meta.env.BASE_URL}photos/about-frame-landscape.webp`} alt="Pixel landscape of purple mountains and a lake at dusk" />
+            <img className="room-about-artwork" src={`${import.meta.env.BASE_URL}photos/paramore-frame-pixel.webp`} alt="Pixel-art group portrait of the band Paramore" />
           </a>
 
           <button
@@ -133,10 +134,15 @@ export default function Hero({ onOpenApp, roomTheme, onToggleTheme }: Props) {
               <path className="room-object-outline" d={pencilHolderPath} />
             </svg>
           </a>
+
+          <a href="#calendar" onClick={(event) => openRoomApp(event, 'calendar')} className="room-object-link room-calendar-hotspot" aria-label="Open GitHub activity from the wall calendar">
+            <PixelCalendarIcon />
+          </a>
         </div>
 
         <nav className="room-compact-controls" aria-label="Room controls">
           <a href="#about" onClick={(event) => openRoomApp(event, 'about')} className="room-compact-action">About me</a>
+          <a href="#calendar" onClick={(event) => openRoomApp(event, 'calendar')} className="room-compact-action room-compact-calendar" aria-label="Open GitHub activity calendar"><PixelCalendarIcon /></a>
           <a href="#contact" onClick={(event) => openRoomApp(event, 'contact')} className="room-compact-action room-compact-contact" aria-label="Write me a letter">
             <svg viewBox="0 0 16 12" fill="none" shapeRendering="crispEdges" aria-hidden="true">
               <path d="M1 1H15V11H1Z M2 2H4V4H6V6H10V4H12V2H14" stroke="currentColor" />

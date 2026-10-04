@@ -8,7 +8,7 @@ const ROOM_WALLPAPERS = {
   day: `url("${import.meta.env.BASE_URL}pixel-developer-room-day-no-plant.webp")`,
 }
 
-const roomApps = new Set<RoomApp>(['welcome', 'projects', 'about', 'contact'])
+const roomApps = new Set<RoomApp>(['welcome', 'projects', 'about', 'contact', 'calendar'])
 
 const getHashApp = (): RoomApp | null => {
   const hash = window.location.hash.slice(1) as RoomApp

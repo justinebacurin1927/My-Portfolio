@@ -11,6 +11,10 @@ node_modules
 dist
 dist-ssr
 *.local
+.env
+.env.*
+!.env.example
+.github-activity-sync-*/
 
 # Local previews and planning logs
 /tmp/

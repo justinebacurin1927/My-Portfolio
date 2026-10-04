@@ -1,2 +1,3 @@
-export type ArcadeGame = 'snake' | 'nightshift'
-export const arcadeTitles: Record<ArcadeGame, string> = { snake: 'Snake', nightshift: 'Nightshift' }
+export type ArcadeGame = 'snake' | 'nightshift' | 'tinycraft'
+export const arcadeGames: ArcadeGame[] = ['snake', 'nightshift', 'tinycraft']
+export const arcadeTitles: Record<ArcadeGame, string> = { snake: 'Snake', nightshift: 'Nightshift', tinycraft: 'Tinycraft' }

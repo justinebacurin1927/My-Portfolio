@@ -7,11 +7,12 @@ import {
   FaFolderOpen,
   FaGithub,
 } from 'react-icons/fa6'
-import { projects } from '../data'
+import { profile, projects } from '../data'
 import BlurImage from './BlurImage'
 import ArcadeIcon from './ArcadeIcon'
-import { arcadeTitles, type ArcadeGame } from '../games/catalog'
+import { arcadeGames, arcadeTitles, type ArcadeGame } from '../games/catalog'
 import ArcadeWindow from './ArcadeWindow'
+import SocialIcon, { type SocialNetwork } from './SocialIcon'
 
 const FEATURED_INDEX = Math.max(
   0,
@@ -19,6 +20,10 @@ const FEATURED_INDEX = Math.max(
 )
 const DESKTOP_WALLPAPER = `url("${import.meta.env.BASE_URL}projects/pixel-landscape-desktop-16bit.webp")`
 const PAPERCLIP_ASSISTANT = `${import.meta.env.BASE_URL}pixel-paperclip-assistant.png`
+const DESKTOP_SOCIALS: { network: SocialNetwork; name: string; href: string }[] = [
+  { network: 'facebook', name: 'Facebook', href: profile.socials.facebook },
+  { network: 'linkedin', name: 'LinkedIn', href: profile.socials.linkedin },
+]
 const PROJECT_TIPS = [
   'Open the Projects folder, then select a file to preview it.',
   'Select a project file to see its screenshot, details, and technologies.',
@@ -89,7 +94,7 @@ export default function Projects({ embedded = false }: Props) {
             <div className="os-desktop-home">
               <div className="os-desktop-status" aria-hidden="true">
                 <span>JB_OS</span>
-                <span>DESKTOP // {projects.length} PROJECTS · 2 GAMES</span>
+                <span>DESKTOP // {projects.length} PROJECTS · {arcadeGames.length} GAMES</span>
               </div>
 
               <div className="os-desktop-icons">
@@ -104,14 +109,16 @@ export default function Projects({ embedded = false }: Props) {
                   <span>{projects.length}</span>
                 </span>
                 <strong>PROJECTS</strong>
-                <small>Folder · {projects.length} files</small>
                 <span className="os-open-prompt">[ CLICK TO OPEN ]</span>
               </button>
-              {(['snake', 'nightshift'] as ArcadeGame[]).map((game) => <button type="button" key={game} data-game={game} onClick={() => openGame(game)} className="os-folder-launcher os-game-launcher" aria-label={`Play ${arcadeTitles[game]}`}>
+              {arcadeGames.map((game) => <button type="button" key={game} data-game={game} onClick={() => openGame(game)} className="os-folder-launcher os-game-launcher" aria-label={`Play ${arcadeTitles[game]}`}>
                 <span className="os-game-icon"><ArcadeIcon game={game} /></span>
                 <strong>{arcadeTitles[game].toUpperCase()}</strong>
-                <small>{game === 'snake' ? 'Chase the stars' : 'A retro maze shooter'}</small>
               </button>)}
+              {DESKTOP_SOCIALS.filter(({ href }) => href).map(({ network, name, href }) => <a key={network} href={href} target="_blank" rel="noopener noreferrer" className="os-folder-launcher os-social-launcher" data-social={network} aria-label={`Open ${profile.name}'s ${name} profile in a new tab`}>
+                <span className="os-game-icon"><SocialIcon network={network} /></span>
+                <strong>{name.toUpperCase()}</strong>
+              </a>)}
               </div>
 
               <div className="os-desktop-help">
@@ -243,6 +250,7 @@ export default function Projects({ embedded = false }: Props) {
                         src={selected.image}
                         alt={`${selected.title} screenshot`}
                         className="os-preview-image"
+                        aspectRatio={selected.imageAspectRatio}
                       />
                     ) : (
                       <div className="os-preview-placeholder">

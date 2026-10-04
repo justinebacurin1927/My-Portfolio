@@ -3,8 +3,9 @@ import About from './About'
 import Contact from './Contact'
 import Projects from './Projects'
 import Welcome from './Welcome'
+import GitHubCalendar from './GitHubCalendar'
 
-export type RoomApp = 'welcome' | 'projects' | 'about' | 'contact'
+export type RoomApp = 'welcome' | 'projects' | 'about' | 'contact' | 'calendar'
 
 type Props = {
   activeApp: RoomApp
@@ -21,11 +22,11 @@ export default function RoomOverlay({ activeApp, onClose }: Props) {
   const windowRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
-    if (activeApp !== 'welcome' && activeApp !== 'contact') windowRef.current?.focus({ preventScroll: true })
+    if (activeApp !== 'welcome' && activeApp !== 'contact' && activeApp !== 'calendar') windowRef.current?.focus({ preventScroll: true })
   }, [activeApp])
 
   useEffect(() => {
-    if (activeApp === 'welcome' || activeApp === 'contact') return
+    if (activeApp === 'welcome' || activeApp === 'contact' || activeApp === 'calendar') return
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && !event.defaultPrevented && !document.pointerLockElement) onClose()
     }
@@ -40,6 +41,10 @@ export default function RoomOverlay({ activeApp, onClose }: Props) {
 
   if (activeApp === 'contact') {
     return <Contact onClose={onClose} />
+  }
+
+  if (activeApp === 'calendar') {
+    return <GitHubCalendar onClose={onClose} />
   }
 
   return (

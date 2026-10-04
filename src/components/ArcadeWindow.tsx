@@ -4,6 +4,7 @@ import { arcadeTitles, type ArcadeGame } from '../games/catalog'
 
 const SnakeGame = lazy(() => import('./games/SnakeGame'))
 const NightshiftGame = lazy(() => import('./games/NightshiftGame'))
+const TinycraftGame = lazy(() => import('./games/TinycraftGame'))
 
 type Props = { game: ArcadeGame; minimized: boolean; onMinimize: () => void; onClose: () => void }
 
@@ -33,7 +34,7 @@ export default function ArcadeWindow({ game, minimized, onMinimize, onClose }: P
       <div className="os-window-controls"><button type="button" onClick={onMinimize} aria-label={`Minimize ${arcadeTitles[game]}`}>—</button><button type="button" onClick={onClose} aria-label={`Close ${arcadeTitles[game]}`}>×</button></div>
     </header>
     <div className="os-arcade-content"><Suspense fallback={<p className="arcade-loading" role="status">Loading game…</p>}>
-      {game === 'snake' ? <SnakeGame active={!minimized} /> : <NightshiftGame active={!minimized} />}
+      {game === 'snake' ? <SnakeGame active={!minimized} /> : game === 'nightshift' ? <NightshiftGame active={!minimized} /> : <TinycraftGame active={!minimized} />}
     </Suspense></div>
   </div>
 }
