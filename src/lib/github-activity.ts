@@ -29,7 +29,8 @@ export function calendarToday() {
 }
 
 export function contributionRange(period: ActivityPeriod, today: string) {
-  if (period !== 'last') return { start: calendarDate(period, 0, 1), end: calendarDate(period, 11, 31) }
+  if (period !== 'last')
+    return { start: calendarDate(period, 0, 1), end: calendarDate(period, 11, 31) }
   const start = new Date(`${today}T12:00:00Z`)
   start.setUTCDate(start.getUTCDate() - 364 - start.getUTCDay())
   return { start: start.toISOString().slice(0, 10), end: today }
@@ -43,7 +44,9 @@ export function contributionWeeks(start: string, end: string): (string | null)[]
     cursor.setUTCDate(cursor.getUTCDate() + 1)
   }
   while (cells.length % 7) cells.push(null)
-  return Array.from({ length: cells.length / 7 }, (_, column) => cells.slice(column * 7, column * 7 + 7))
+  return Array.from({ length: cells.length / 7 }, (_, column) =>
+    cells.slice(column * 7, column * 7 + 7),
+  )
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -83,50 +86,87 @@ export async function readActivityJson(response: Response): Promise<unknown> {
 }
 
 export function parseActivity(value: unknown, period: ActivityPeriod): ActivityData {
-  if (!isRecord(value) || !Array.isArray(value.contributions) || value.contributions.length === 0
-    || value.contributions.length > MAX_ACTIVITY_DAYS) {
+  if (
+    !isRecord(value) ||
+    !Array.isArray(value.contributions) ||
+    value.contributions.length === 0 ||
+    value.contributions.length > MAX_ACTIVITY_DAYS
+  ) {
     throw new Error('GitHub activity could not be read.')
   }
 
   const days: Record<string, ActivityDay> = {}
   let total = 0
   for (const day of value.contributions) {
-    if (!isRecord(day) || !isCalendarDate(day.date)
-      || (period !== 'last' && Number(day.date.slice(0, 4)) !== period)
-      || !Number.isSafeInteger(day.count) || (day.count as number) < 0
-      || !Number.isInteger(day.level) || (day.level as number) < 0 || (day.level as number) > 4) {
+    if (
+      !isRecord(day) ||
+      !isCalendarDate(day.date) ||
+      (period !== 'last' && Number(day.date.slice(0, 4)) !== period) ||
+      !Number.isSafeInteger(day.count) ||
+      (day.count as number) < 0 ||
+      !Number.isInteger(day.level) ||
+      (day.level as number) < 0 ||
+      (day.level as number) > 4
+    ) {
       throw new Error('GitHub activity could not be read.')
     }
     total += day.count as number
     if (!Number.isSafeInteger(total) || days[day.date]) {
       throw new Error('GitHub activity could not be read.')
     }
-    days[day.date] = { date: day.date, count: day.count as number, level: day.level as ActivityDay['level'] }
+    days[day.date] = {
+      date: day.date,
+      count: day.count as number,
+      level: day.level as ActivityDay['level'],
+    }
   }
   return { period, days, fetchedAt: Date.now(), includesPrivate: false }
 }
 
-export function parseActivitySnapshot(value: unknown, username: string, period: ActivityPeriod): ActivityData {
-  if (!isRecord(value) || value.version !== 1 || value.username !== username || value.includesPrivate !== true
-    || typeof value.generatedAt !== 'string' || Number.isNaN(Date.parse(value.generatedAt))
-    || new Date(value.generatedAt).toISOString() !== value.generatedAt
-    || !isCalendarDate(value.through) || value.through !== value.generatedAt.slice(0, 10)
-    || value.through > calendarToday() || !isRecord(value.periods)) {
+export function parseActivitySnapshot(
+  value: unknown,
+  username: string,
+  period: ActivityPeriod,
+): ActivityData {
+  if (
+    !isRecord(value) ||
+    value.version !== 1 ||
+    value.username !== username ||
+    value.includesPrivate !== true ||
+    typeof value.generatedAt !== 'string' ||
+    Number.isNaN(Date.parse(value.generatedAt)) ||
+    new Date(value.generatedAt).toISOString() !== value.generatedAt ||
+    !isCalendarDate(value.through) ||
+    value.through !== value.generatedAt.slice(0, 10) ||
+    value.through > calendarToday() ||
+    !isRecord(value.periods)
+  ) {
     throw new Error('The contribution snapshot could not be read.')
   }
   const selected = value.periods[period]
   const data = parseActivity(selected, period)
   const range = contributionRange(period, value.through)
-  const dates = contributionWeeks(range.start, range.end).flat().filter((date): date is string => date !== null)
-  if (!isRecord(selected) || !Number.isSafeInteger(selected.total)
-    || Object.keys(data.days).length !== dates.length || !dates.every((date) => data.days[date])
-    || dates.reduce((sum, date) => sum + data.days[date].count, 0) !== selected.total) {
+  const dates = contributionWeeks(range.start, range.end)
+    .flat()
+    .filter((date): date is string => date !== null)
+  if (
+    !isRecord(selected) ||
+    !Number.isSafeInteger(selected.total) ||
+    Object.keys(data.days).length !== dates.length ||
+    !dates.every((date) => data.days[date]) ||
+    dates.reduce((sum, date) => sum + data.days[date].count, 0) !== selected.total
+  ) {
     throw new Error('The contribution snapshot is incomplete.')
   }
   return { ...data, includesPrivate: true, through: value.through, updatedAt: value.generatedAt }
 }
 
-export async function fetchActivity(username: string, period: ActivityPeriod, signal: AbortSignal, refresh = false): Promise<ActivityData> {
+export async function fetchActivity(
+  username: string,
+  period: ActivityPeriod,
+  signal: AbortSignal,
+  refresh = false,
+): Promise<ActivityData> {
   const cacheKey = `${username}/${period}${period === 'last' ? `/${calendarToday()}` : ''}`
   const cached = activityCache.get(cacheKey)
   if (signal.aborted) throw new DOMException('Activity request canceled', 'AbortError')
@@ -141,7 +181,10 @@ export async function fetchActivity(username: string, period: ActivityPeriod, si
     // stays in the local sync/build script and never enters the browser bundle.
     try {
       const snapshot = await fetch(`${import.meta.env.BASE_URL}github-activity.json`, {
-        signal: controller.signal, credentials: 'omit', cache: 'no-store', redirect: 'error',
+        signal: controller.signal,
+        credentials: 'omit',
+        cache: 'no-store',
+        redirect: 'error',
       })
       if (snapshot.ok && snapshot.headers.get('content-type')?.includes('application/json')) {
         const activity = parseActivitySnapshot(await readActivityJson(snapshot), username, period)
@@ -150,12 +193,16 @@ export async function fetchActivity(username: string, period: ActivityPeriod, si
         return activity
       }
     } catch {
-      if (controller.signal.aborted) throw new DOMException('Activity request canceled', 'AbortError')
+      if (controller.signal.aborted)
+        throw new DOMException('Activity request canceled', 'AbortError')
     }
-    const response = await fetch(`https://github-contributions-api.jogruber.de/v4/${encodeURIComponent(username)}?y=${period}`, {
-      signal: controller.signal,
-      credentials: 'omit',
-    })
+    const response = await fetch(
+      `https://github-contributions-api.jogruber.de/v4/${encodeURIComponent(username)}?y=${period}`,
+      {
+        signal: controller.signal,
+        credentials: 'omit',
+      },
+    )
     if (!response.ok) throw new Error('GitHub activity is unavailable right now.')
     const activity = parseActivity(await readActivityJson(response), period)
     if (signal.aborted) throw new DOMException('Activity request canceled', 'AbortError')

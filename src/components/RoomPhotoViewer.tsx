@@ -1,5 +1,6 @@
-import { useEffect, useRef, type CSSProperties } from 'react'
+import { useRef, type CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
+import { useDialogFocus } from '../hooks/useDialogFocus'
 
 export type RoomPhoto = {
   src: string
@@ -14,19 +15,7 @@ type Props = RoomPhoto & { onClose: () => void }
 export default function RoomPhotoViewer({ src, alt, label, aspectRatio, caption, onClose }: Props) {
   const dialogRef = useRef<HTMLDialogElement>(null)
 
-  useEffect(() => {
-    const dialog = dialogRef.current
-    if (!dialog) return
-    const previousFocus = document.activeElement
-    dialog.showModal()
-
-    return () => {
-      dialog.close()
-      if (previousFocus instanceof HTMLElement && previousFocus.isConnected) {
-        previousFocus.focus({ preventScroll: true })
-      }
-    }
-  }, [])
+  useDialogFocus(dialogRef)
 
   return createPortal(
     <dialog
@@ -43,7 +32,13 @@ export default function RoomPhotoViewer({ src, alt, label, aspectRatio, caption,
         if (event.target === event.currentTarget) onClose()
       }}
     >
-      <button className="room-photo-close" type="button" onClick={onClose} aria-label={`Close ${label.toLowerCase()}`} autoFocus>
+      <button
+        className="room-photo-close"
+        type="button"
+        onClick={onClose}
+        aria-label={`Close ${label.toLowerCase()}`}
+        autoFocus
+      >
         ×
       </button>
       <figure className="room-photo-frame">

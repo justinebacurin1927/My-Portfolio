@@ -1,18 +1,17 @@
 import { useCallback, useEffect, useState, type CSSProperties } from 'react'
-import Hero, { type RoomTheme } from './components/Hero'
+import Hero from './components/Hero'
 import BootLoader from './components/BootLoader'
-import RoomOverlay, { type RoomApp } from './components/RoomOverlay'
+import RoomOverlay from './components/RoomOverlay'
+import { isRoomApp, type RoomApp, type RoomTheme } from './types/room'
 
 const ROOM_WALLPAPERS = {
   night: `url("${import.meta.env.BASE_URL}pixel-developer-room-night-no-plant.webp")`,
   day: `url("${import.meta.env.BASE_URL}pixel-developer-room-day-no-plant.webp")`,
 }
 
-const roomApps = new Set<RoomApp>(['welcome', 'projects', 'about', 'contact', 'calendar'])
-
 const getHashApp = (): RoomApp | null => {
-  const hash = window.location.hash.slice(1) as RoomApp
-  return roomApps.has(hash) ? hash : null
+  const hash = window.location.hash.slice(1)
+  return isRoomApp(hash) ? hash : null
 }
 
 function App() {
@@ -40,7 +39,7 @@ function App() {
   }, [])
 
   const toggleRoomTheme = useCallback(() => {
-    setRoomTheme((current) => current === 'night' ? 'day' : 'night')
+    setRoomTheme((current) => (current === 'night' ? 'day' : 'night'))
   }, [])
 
   return (
@@ -48,16 +47,18 @@ function App() {
       className="pixel-app relative isolate min-h-screen overflow-hidden text-slate-100 antialiased"
       data-intro-open={activeApp === 'welcome'}
       data-room-theme={roomTheme}
-      style={{
-        '--room-wallpaper': ROOM_WALLPAPERS[roomTheme],
-        '--room-night-wallpaper': ROOM_WALLPAPERS.night,
-        '--room-day-wallpaper': ROOM_WALLPAPERS.day,
-      } as CSSProperties}
+      style={
+        {
+          '--room-wallpaper': ROOM_WALLPAPERS[roomTheme],
+          '--room-night-wallpaper': ROOM_WALLPAPERS.night,
+          '--room-day-wallpaper': ROOM_WALLPAPERS.day,
+        } as CSSProperties
+      }
     >
       <BootLoader />
       <main className="room-main relative z-10">
         <Hero onOpenApp={openApp} roomTheme={roomTheme} onToggleTheme={toggleRoomTheme} />
-        {activeApp && <RoomOverlay activeApp={activeApp} onClose={closeApp} />}
+        {activeApp && <RoomOverlay key={activeApp} activeApp={activeApp} onClose={closeApp} />}
       </main>
     </div>
   )

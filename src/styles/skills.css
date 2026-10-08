@@ -1,0 +1,68 @@
+/* Skills solar system */
+
+.solar-sun {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  width: 15cqmin;
+  height: 15cqmin;
+  align-items: center;
+  justify-content: center;
+  color: #020617;
+  background: #fcd34d;
+  border: 3px solid #020617;
+  box-shadow:
+    4px 4px 0 #b45309,
+    8px 8px 0 #020617;
+  transform: translate(-50%, -50%) rotate(45deg);
+  animation: solar-pulse 1.4s steps(2, end) infinite;
+}
+
+.solar-sun svg {
+  transform: rotate(-45deg);
+}
+
+.solar-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--d);
+  height: var(--d);
+  border: 2px dashed rgba(129, 140, 248, 0.65);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.solar-orbit {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform: rotate(var(--angle)) translateX(var(--radius)) rotate(calc(-1 * var(--angle)));
+  animation: solar-spin var(--duration, 40s) steps(120, end) infinite;
+}
+
+.solar-orbit.reverse {
+  animation-direction: reverse;
+}
+
+.solar-orbit:hover,
+.solar-orbit:focus-within {
+  z-index: 20;
+  animation-play-state: paused;
+}
+
+.solar-planet {
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
+.pixel-planet {
+  background: #12152f;
+  border: 2px solid #020617;
+  box-shadow:
+    3px 3px 0 #020617,
+    5px 5px 0 currentColor;
+}

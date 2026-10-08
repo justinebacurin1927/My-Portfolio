@@ -1,0 +1,8 @@
+node_modules/
+dist/
+dist-ssr/
+public/
+tmp/
+_bmad-output/
+.claude/
+package-lock.json

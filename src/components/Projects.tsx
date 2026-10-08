@@ -33,11 +33,7 @@ const PROJECT_TIPS = [
   'Use Back in the explorer to return to the desktop.',
 ]
 
-type Props = {
-  embedded?: boolean
-}
-
-export default function Projects({ embedded = false }: Props) {
+export default function Projects() {
   const [folderOpen, setFolderOpen] = useState(false)
   const [windowMinimized, setWindowMinimized] = useState(false)
   const [windowMaximized, setWindowMaximized] = useState(false)
@@ -67,23 +63,8 @@ export default function Projects({ embedded = false }: Props) {
   }
 
   return (
-    <section id="projects" className={embedded ? 'room-embedded-section room-projects-app' : 'scroll-mt-20 px-4 py-10 sm:px-6 sm:py-16'}>
-      <div className={embedded ? 'h-full' : 'mx-auto max-w-6xl'}>
-        {!embedded && (
-          <div className="mb-8 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
-            <div>
-              <div className="pixel-section-label mb-5">01 // PROJECT_ARCHIVE</div>
-              <h2 className="font-mono text-3xl font-bold uppercase text-white sm:text-5xl">
-                Open my project files
-              </h2>
-            </div>
-            <p className="max-w-md text-sm leading-relaxed text-slate-400 sm:text-right">
-              Explore the systems, experiments, and interfaces I have built. Open a
-              file to inspect the project and its source.
-            </p>
-          </div>
-        )}
-
+    <section id="projects" className="room-embedded-section room-projects-app">
+      <div className="h-full">
         <div
           className="os-desktop"
           data-folder-open={folderOpen}
@@ -95,35 +76,68 @@ export default function Projects({ embedded = false }: Props) {
             <div className="os-desktop-home">
               <div className="os-desktop-status" aria-hidden="true">
                 <span>JB_OS</span>
-                <span>DESKTOP // {projects.length} PROJECTS · {arcadeGames.length} GAMES</span>
+                <span>
+                  DESKTOP // {projects.length} PROJECTS · {arcadeGames.length} GAMES
+                </span>
               </div>
 
               <div className="os-desktop-icons">
-              <button
-                type="button"
-                onClick={openFolder}
-                className="os-folder-launcher group"
-                aria-label={`Open Projects folder containing ${projects.length} projects`}
-              >
-                <span className="os-folder-icon" aria-hidden="true">
-                  <FaFolder />
-                  <span>{projects.length}</span>
-                </span>
-                <strong>PROJECTS</strong>
-                <span className="os-open-prompt">[ CLICK TO OPEN ]</span>
-              </button>
-              {arcadeGames.map((game) => <button type="button" key={game} data-game={game} onClick={() => openGame(game)} className="os-folder-launcher os-game-launcher" aria-label={`Play ${arcadeTitles[game]}`}>
-                <span className="os-game-icon"><ArcadeIcon game={game} /></span>
-                <strong>{arcadeTitles[game].toUpperCase()}</strong>
-              </button>)}
-              {DESKTOP_SOCIALS.filter(({ href }) => href).map(({ network, name, href }) => <a key={network} href={href} target="_blank" rel="noopener noreferrer" className="os-folder-launcher os-social-launcher" data-social={network} aria-label={`Open ${profile.name}'s ${name} profile in a new tab`}>
-                <span className="os-game-icon"><SocialIcon network={network} /></span>
-                <strong>{name.toUpperCase()}</strong>
-              </a>)}
-              <a href={profile.studio.url} target="_blank" rel="noopener noreferrer" className="os-folder-launcher os-studio-launcher" aria-label="Open ARKO Software Studio in a new tab">
-                <span className="os-game-icon"><ArkoIcon /></span>
-                <strong>ARKO</strong>
-              </a>
+                <button
+                  type="button"
+                  onClick={openFolder}
+                  className="os-folder-launcher group"
+                  aria-label={`Open Projects folder containing ${projects.length} projects`}
+                >
+                  <span className="os-folder-icon" aria-hidden="true">
+                    <FaFolder />
+                    <span>{projects.length}</span>
+                  </span>
+                  <strong>PROJECTS</strong>
+                  <span className="os-open-prompt">[ CLICK TO OPEN ]</span>
+                </button>
+                {arcadeGames.map((game) => (
+                  <button
+                    type="button"
+                    key={game}
+                    data-game={game}
+                    onClick={() => openGame(game)}
+                    className="os-folder-launcher os-game-launcher"
+                    aria-label={`Play ${arcadeTitles[game]}`}
+                  >
+                    <span className="os-game-icon">
+                      <ArcadeIcon game={game} />
+                    </span>
+                    <strong>{arcadeTitles[game].toUpperCase()}</strong>
+                  </button>
+                ))}
+                {DESKTOP_SOCIALS.filter(({ href }) => href).map(({ network, name, href }) => (
+                  <a
+                    key={network}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="os-folder-launcher os-social-launcher"
+                    data-social={network}
+                    aria-label={`Open ${profile.name}'s ${name} profile in a new tab`}
+                  >
+                    <span className="os-game-icon">
+                      <SocialIcon network={network} />
+                    </span>
+                    <strong>{name.toUpperCase()}</strong>
+                  </a>
+                ))}
+                <a
+                  href={profile.studio.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="os-folder-launcher os-studio-launcher"
+                  aria-label="Open ARKO Software Studio in a new tab"
+                >
+                  <span className="os-game-icon">
+                    <ArkoIcon />
+                  </span>
+                  <strong>ARKO</strong>
+                </a>
               </div>
 
               <div className="os-desktop-help">
@@ -134,15 +148,13 @@ export default function Projects({ embedded = false }: Props) {
                   aria-label={`Show next tip. Tip ${tipIndex + 1} of ${PROJECT_TIPS.length}.`}
                   title="Click for another tip"
                 >
-                  <img
-                    src={PAPERCLIP_ASSISTANT}
-                    alt=""
-                    className="pixel-paperclip-assistant"
-                  />
+                  <img src={PAPERCLIP_ASSISTANT} alt="" className="pixel-paperclip-assistant" />
                 </button>
                 <span className="os-tip-label">TIP_{String(tipIndex + 1).padStart(2, '0')}</span>
                 <p aria-live="polite">{PROJECT_TIPS[tipIndex]}</p>
-                <span className="os-tip-hint" aria-hidden="true">CLICK CLIP FOR MORE</span>
+                <span className="os-tip-hint" aria-hidden="true">
+                  CLICK CLIP FOR MORE
+                </span>
               </div>
             </div>
           )}
@@ -170,7 +182,9 @@ export default function Projects({ embedded = false }: Props) {
                   <button
                     type="button"
                     onClick={() => setWindowMaximized((current) => !current)}
-                    aria-label={windowMaximized ? 'Restore Project Explorer' : 'Maximize Project Explorer'}
+                    aria-label={
+                      windowMaximized ? 'Restore Project Explorer' : 'Maximize Project Explorer'
+                    }
                     title={windowMaximized ? 'Restore' : 'Maximize'}
                   >
                     {windowMaximized ? '❐' : '□'}
@@ -187,7 +201,12 @@ export default function Projects({ embedded = false }: Props) {
               </div>
 
               <div className="os-window-menu" aria-hidden="true">
-                <span>File</span><span>Edit</span><span>View</span><span>Favorites</span><span>Tools</span><span>Help</span>
+                <span>File</span>
+                <span>Edit</span>
+                <span>View</span>
+                <span>Favorites</span>
+                <span>Tools</span>
+                <span>Help</span>
               </div>
 
               <div className="os-window-toolbar">
@@ -215,7 +234,9 @@ export default function Projects({ embedded = false }: Props) {
                   </button>
                   <div className="os-storage-meter">
                     <span>PORTFOLIO DRIVE</span>
-                    <div><i /></div>
+                    <div>
+                      <i />
+                    </div>
                     <small>{projects.length} builds available</small>
                   </div>
                 </aside>
@@ -243,69 +264,91 @@ export default function Projects({ embedded = false }: Props) {
                     })}
                   </div>
 
-                  <article className="os-preview" aria-live="polite">
-                    <div className="os-preview-kicker">
-                      <span>FILE PREVIEW</span>
-                      <span>{String(selectedIndex + 1).padStart(2, '0')} / {String(projects.length).padStart(2, '0')}</span>
-                    </div>
-
-                    {selected.image ? (
-                      <BlurImage
-                        key={selected.image}
-                        src={selected.image}
-                        alt={`${selected.title} screenshot`}
-                        className="os-preview-image"
-                        aspectRatio={selected.imageAspectRatio}
-                      />
-                    ) : (
-                      <div className="os-preview-placeholder">
-                        <FaFileCode aria-hidden="true" />
-                        <span>PREVIEW_NOT_AVAILABLE.PNG</span>
+                  {selected && (
+                    <article className="os-preview" aria-live="polite">
+                      <div className="os-preview-kicker">
+                        <span>FILE PREVIEW</span>
+                        <span>
+                          {String(selectedIndex + 1).padStart(2, '0')} /{' '}
+                          {String(projects.length).padStart(2, '0')}
+                        </span>
                       </div>
-                    )}
 
-                    <div className="os-preview-body">
-                      <p className="os-file-path">PROJECTS/{selected.fileName}</p>
-                      <h3>{selected.title}</h3>
-                      <p>{selected.overview ?? selected.description}</p>
+                      {selected.image ? (
+                        <BlurImage
+                          key={selected.image}
+                          src={selected.image}
+                          alt={`${selected.title} screenshot`}
+                          className="os-preview-image"
+                          aspectRatio={selected.imageAspectRatio}
+                        />
+                      ) : (
+                        <div className="os-preview-placeholder">
+                          <FaFileCode aria-hidden="true" />
+                          <span>PREVIEW_NOT_AVAILABLE.PNG</span>
+                        </div>
+                      )}
 
-                      <ul aria-label="Technologies used">
-                        {selected.tags.map((tag) => (
-                          <li key={tag}>{tag}</li>
-                        ))}
-                      </ul>
+                      <div className="os-preview-body">
+                        <p className="os-file-path">PROJECTS/{selected.fileName}</p>
+                        <h3>{selected.title}</h3>
+                        <p>{selected.overview ?? selected.description}</p>
 
-                      <div className="os-preview-actions">
-                        {selected.repo && (
-                          <a href={selected.repo} target="_blank" rel="noreferrer">
-                            <FaGithub aria-hidden="true" /> View source
-                          </a>
-                        )}
-                        {selected.demoStatus ? (
-                          <span aria-disabled="true">{selected.demoStatus}</span>
-                        ) : selected.link ? (
-                          <a href={selected.link} target="_blank" rel="noreferrer">
-                            <FaArrowUpRightFromSquare aria-hidden="true" /> {selected.linkLabel ?? 'Live demo'}
-                          </a>
-                        ) : null}
+                        <ul aria-label="Technologies used">
+                          {selected.tags.map((tag) => (
+                            <li key={tag}>{tag}</li>
+                          ))}
+                        </ul>
+
+                        <div className="os-preview-actions">
+                          {selected.repo && (
+                            <a href={selected.repo} target="_blank" rel="noreferrer">
+                              <FaGithub aria-hidden="true" /> View source
+                            </a>
+                          )}
+                          {selected.demoStatus ? (
+                            <span aria-disabled="true">{selected.demoStatus}</span>
+                          ) : selected.link ? (
+                            <a href={selected.link} target="_blank" rel="noreferrer">
+                              <FaArrowUpRightFromSquare aria-hidden="true" />{' '}
+                              {selected.linkLabel ?? 'Live demo'}
+                            </a>
+                          ) : null}
+                        </div>
                       </div>
-                    </div>
-                  </article>
+                    </article>
+                  )}
                 </div>
               </div>
 
               <div className="os-window-statusbar">
-                <span>{selected.fileName} selected</span>
-                <span>SOURCE: {selected.repo ? 'AVAILABLE' : 'PRIVATE'}</span>
+                <span>{selected ? `${selected.fileName} selected` : 'No projects available'}</span>
+                <span>SOURCE: {selected?.repo ? 'AVAILABLE' : 'PRIVATE'}</span>
               </div>
             </div>
           )}
 
-          {arcadeGame && <ArcadeWindow key={arcadeGame} game={arcadeGame} minimized={arcadeMinimized} onMinimize={() => setArcadeMinimized(true)} onClose={() => { setArcadeGame(null); setArcadeMinimized(false) }} />}
+          {arcadeGame && (
+            <ArcadeWindow
+              key={arcadeGame}
+              game={arcadeGame}
+              minimized={arcadeMinimized}
+              onMinimize={() => setArcadeMinimized(true)}
+              onClose={() => {
+                setArcadeGame(null)
+                setArcadeMinimized(false)
+              }}
+            />
+          )}
 
           <div className="os-taskbar">
             <button type="button" className="os-start-button" onClick={openFolder}>
-              <span className="os-start-mark" aria-hidden="true"><i /><i /><i /><i /></span>
+              <span className="os-start-mark" aria-hidden="true">
+                <i />
+                <i />
+                <i />
+                <i />
+              </span>
               Start
             </button>
             <div className="os-quick-launch">
@@ -319,12 +362,29 @@ export default function Projects({ embedded = false }: Props) {
                 className="os-task-button"
                 data-active={!windowMinimized}
                 aria-pressed={!windowMinimized}
-                onClick={() => { if (windowMinimized && arcadeGame) setArcadeMinimized(true); setWindowMinimized((current) => !current) }}
+                onClick={() => {
+                  if (windowMinimized && arcadeGame) setArcadeMinimized(true)
+                  setWindowMinimized((current) => !current)
+                }}
               >
                 <FaFolderOpen aria-hidden="true" /> Projects
               </button>
             )}
-            {arcadeGame && <button type="button" className="os-task-button os-task-button--arcade" data-active={!arcadeMinimized} aria-pressed={!arcadeMinimized} onClick={() => { if (arcadeMinimized && folderOpen) setWindowMinimized(true); setArcadeMinimized((current) => !current) }}><ArcadeIcon game={arcadeGame} />{arcadeTitles[arcadeGame]}</button>}
+            {arcadeGame && (
+              <button
+                type="button"
+                className="os-task-button os-task-button--arcade"
+                data-active={!arcadeMinimized}
+                aria-pressed={!arcadeMinimized}
+                onClick={() => {
+                  if (arcadeMinimized && folderOpen) setWindowMinimized(true)
+                  setArcadeMinimized((current) => !current)
+                }}
+              >
+                <ArcadeIcon game={arcadeGame} />
+                {arcadeTitles[arcadeGame]}
+              </button>
+            )}
             <div className="os-system-tray">
               <span aria-hidden="true" /> ONLINE
             </div>

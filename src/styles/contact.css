@@ -1,0 +1,528 @@
+/* A paper letter over the room */
+
+.room-letter-dialog {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: max(28px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right))
+    max(28px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
+  overflow: auto;
+  overscroll-behavior: contain;
+  color: #473039;
+  background: transparent;
+  border: 0;
+  color-scheme: light;
+  font-family: 'Pixelify Sans Variable', ui-monospace, monospace;
+  scrollbar-color: #a28679 #302237;
+}
+
+.room-letter-dialog[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+.room-letter-dialog::backdrop {
+  background: rgba(8, 5, 19, 0.74);
+}
+
+.room-letter-scene {
+  position: relative;
+  width: min(650px, 100%);
+  flex: none;
+  margin: auto;
+  animation: room-letter-arrive 240ms steps(5, end) both;
+}
+
+.room-letter-close {
+  position: absolute;
+  top: -16px;
+  right: -8px;
+  z-index: 3;
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  color: #f7e8c7;
+  background: #57405e;
+  border: 3px solid #302132;
+  box-shadow: 3px 3px 0 #b8977e;
+  font-family: inherit;
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.room-letter-close:hover {
+  background: #735573;
+}
+
+.room-letter-close:focus-visible {
+  outline: 3px solid #bce4e3;
+  outline-offset: 3px;
+}
+
+.room-letter-composition {
+  position: relative;
+  padding-bottom: 20px;
+}
+
+.room-letter-envelope {
+  position: absolute;
+  right: 22px;
+  bottom: 0;
+  left: 22px;
+  pointer-events: none;
+}
+
+.room-letter-envelope > svg {
+  display: block;
+  width: 100%;
+}
+
+.room-letter-paper,
+.room-letter-receipt {
+  position: relative;
+  padding: 30px 36px;
+  background: #f3e6c8;
+  border: 3px solid #60464a;
+  box-shadow:
+    inset 3px 3px 0 #fff3da,
+    inset -3px -3px 0 #dfc99e,
+    6px 6px 0 #302132;
+}
+
+.room-letter-paper::after {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  bottom: 6px;
+  left: 6px;
+  border: 1px solid #d9c49e;
+  pointer-events: none;
+  content: '';
+}
+
+.room-letter-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.room-letter-kicker {
+  margin: 0 0 10px;
+  color: #785861;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+}
+
+.room-letter-header h2,
+.room-letter-receipt h2 {
+  margin: 0;
+  color: #443044;
+  font-size: clamp(1.7rem, 4vw, 2.15rem);
+  line-height: 1.15;
+  font-weight: 600;
+}
+
+.room-letter-intro {
+  margin: 8px 0 0;
+  color: #705954;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.room-letter-stamp {
+  width: 48px;
+  height: 56px;
+  flex: none;
+  margin-top: 4px;
+}
+
+.room-letter-recipient {
+  display: flex;
+  gap: 14px;
+  align-items: baseline;
+  margin: 22px 0;
+  padding: 15px 0;
+  border-top: 2px solid #d3bc97;
+  border-bottom: 2px solid #d3bc97;
+}
+
+.room-letter-recipient > span,
+.room-letter-paper label {
+  color: #76555d;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.room-letter-recipient > div {
+  min-width: 0;
+}
+
+.room-letter-recipient strong {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.room-letter-recipient a {
+  color: #775b5c;
+  overflow-wrap: anywhere;
+  font-size: 0.9rem;
+}
+
+.room-letter-recipient a:hover {
+  color: #473044;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.room-letter-paper fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.room-letter-sender {
+  display: grid;
+  grid-template-columns: 1fr 1.35fr;
+  gap: 24px;
+}
+
+.room-letter-sender > div {
+  min-width: 0;
+}
+
+.room-letter-paper label {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.room-letter-paper input,
+.room-letter-paper textarea {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  border-radius: 0;
+  outline: none;
+  color: #45313c;
+  background-color: transparent;
+  font-family: inherit;
+  font-size: 1.1rem;
+}
+
+.room-letter-paper input {
+  min-height: 44px;
+  padding: 4px 0;
+  border: 0;
+  border-bottom: 2px solid #b99d86;
+  box-shadow: none;
+}
+
+.room-letter-paper input::placeholder,
+.room-letter-paper textarea::placeholder {
+  color: #89705f;
+  opacity: 1;
+}
+
+.room-letter-paper input:focus-visible {
+  border-bottom-color: #664563;
+  box-shadow: 0 3px 0 #bca2b3;
+}
+
+.room-letter-message {
+  margin-top: 24px;
+}
+
+.room-letter-salutation {
+  display: block;
+  margin-top: 8px;
+  color: #654a50;
+  font-size: 1.1rem;
+  line-height: 32px;
+}
+
+.room-letter-paper textarea {
+  height: 160px;
+  min-height: 128px;
+  padding: 0 4px;
+  resize: vertical;
+  border: 0;
+  background-image: repeating-linear-gradient(to bottom, transparent 0 30px, #d3bd99 30px 32px);
+  background-attachment: local;
+  line-height: 32px;
+}
+
+.room-letter-paper textarea:focus-visible {
+  outline: 2px solid #8a6680;
+  outline-offset: 4px;
+}
+
+.room-letter-paper fieldset:disabled {
+  opacity: 0.76;
+}
+
+.room-letter-paper fieldset:disabled input,
+.room-letter-paper fieldset:disabled textarea {
+  cursor: wait;
+}
+
+.room-letter-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.room-letter-signoff {
+  color: #76555d;
+  font-size: 1rem;
+}
+
+.room-letter-send {
+  display: inline-flex;
+  min-height: 46px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 8px 16px;
+  border: 2px solid #38293f;
+  box-shadow: 3px 3px 0 #b89d7d;
+  color: #f8edcf;
+  background: #604564;
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.room-letter-send > svg {
+  width: 26px;
+  height: 20px;
+}
+
+.room-letter-send:hover:not(:disabled) {
+  color: #38293f;
+  background: #dec08a;
+}
+
+.room-letter-send:active:not(:disabled) {
+  box-shadow: none;
+  transform: translate(3px, 3px);
+}
+
+.room-letter-send:focus-visible {
+  outline: 3px solid #8a6680;
+  outline-offset: 4px;
+}
+
+.room-letter-send:disabled {
+  cursor: wait;
+  opacity: 0.76;
+}
+
+.room-letter-feedback {
+  margin: 16px 0 0;
+  color: #61455a;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.room-letter-feedback--error {
+  padding-left: 10px;
+  border-left: 3px solid #9c4849;
+  color: #8a333a;
+}
+
+.room-letter-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  color: #e0cec3;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.room-letter-footer > div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+}
+
+.room-letter-footer a {
+  display: inline-flex;
+  min-height: 32px;
+  align-items: center;
+  gap: 7px;
+}
+
+.room-letter-footer .room-letter-direct {
+  display: block;
+  min-height: 0;
+  overflow-wrap: anywhere;
+}
+
+.room-letter-footer a:hover {
+  color: #fff0c5;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.room-letter-footer a:focus-visible {
+  outline: 2px solid #bce4e3;
+  outline-offset: 4px;
+}
+
+.room-letter-scene[data-phase='folding'] .room-letter-paper {
+  transform-origin: 50% 100%;
+  pointer-events: none;
+  animation: room-letter-fold 720ms steps(8, end) forwards;
+}
+
+.room-letter-scene[data-phase='folding'] .room-letter-envelope {
+  animation: room-letter-envelope-seal 720ms steps(6, end) both;
+}
+
+.room-letter-receipt {
+  padding: 36px 28px;
+  text-align: center;
+}
+
+.room-letter-delivered-envelope {
+  width: min(260px, 80%);
+  margin: 0 auto 20px;
+}
+
+.room-letter-delivered-envelope > svg {
+  display: block;
+  width: 100%;
+}
+
+.room-letter-receipt .room-letter-kicker {
+  margin-bottom: 8px;
+}
+
+.room-letter-receipt > p[role='status'] {
+  margin: 16px 0 24px;
+  color: #705954;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.room-letter-receipt h2:focus {
+  outline: none;
+}
+
+@keyframes room-letter-arrive {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes room-letter-fold {
+  0% {
+    opacity: 1;
+    transform: scale(1, 1);
+  }
+  45% {
+    opacity: 1;
+    transform: scale(0.94, 0.5);
+  }
+  80% {
+    opacity: 1;
+    transform: scale(0.85, 0.08);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.85, 0.02);
+  }
+}
+
+@keyframes room-letter-envelope-seal {
+  0%,
+  45% {
+    transform: translateY(0);
+  }
+  80%,
+  100% {
+    transform: translateY(-8px);
+  }
+}
+
+@media (max-width: 480px) {
+  .room-letter-dialog {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+  .room-letter-paper {
+    padding: 26px 20px;
+  }
+  .room-letter-header {
+    gap: 12px;
+  }
+  .room-letter-stamp {
+    width: 36px;
+    height: 42px;
+    margin-top: 12px;
+  }
+  .room-letter-sender {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .room-letter-actions {
+    gap: 8px;
+  }
+  .room-letter-send {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+  .room-letter-envelope {
+    right: 12px;
+    left: 12px;
+  }
+  .room-letter-receipt {
+    padding: 36px 18px;
+  }
+  .room-letter-paper textarea {
+    height: 128px;
+  }
+}
+
+@media (max-height: 740px) {
+  .room-letter-paper {
+    padding-top: 24px;
+    padding-bottom: 24px;
+  }
+  .room-letter-recipient {
+    margin: 18px 0;
+    padding: 12px 0;
+  }
+  .room-letter-message {
+    margin-top: 18px;
+  }
+  .room-letter-paper textarea {
+    height: 128px;
+  }
+  .room-letter-actions {
+    margin-top: 18px;
+  }
+}
+
+@media (max-width: 480px), (max-height: 740px) {
+  .room-letter-close {
+    position: fixed;
+    top: max(8px, env(safe-area-inset-top));
+    right: max(8px, env(safe-area-inset-right));
+  }
+}

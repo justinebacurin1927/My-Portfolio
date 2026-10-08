@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import About from './About'
 import Contact from './Contact'
 import Projects from './Projects'
 import Welcome from './Welcome'
 import GitHubCalendar from './GitHubCalendar'
-
-export type RoomApp = 'welcome' | 'projects' | 'about' | 'contact' | 'calendar'
+import { useDialogFocus } from '../hooks/useDialogFocus'
+import type { RoomApp } from '../types/room'
 
 type Props = {
   activeApp: RoomApp
@@ -17,35 +17,11 @@ const appTitles = {
   about: 'ABOUT_ME.TXT',
 }
 
-export default function RoomOverlay({ activeApp, onClose }: Props) {
+function AppWindow({ activeApp, onClose }: Props & { activeApp: 'projects' | 'about' }) {
   const [maximized, setMaximized] = useState(false)
   const windowRef = useRef<HTMLElement>(null)
 
-  useEffect(() => {
-    if (activeApp !== 'welcome' && activeApp !== 'contact' && activeApp !== 'calendar') windowRef.current?.focus({ preventScroll: true })
-  }, [activeApp])
-
-  useEffect(() => {
-    if (activeApp === 'welcome' || activeApp === 'contact' || activeApp === 'calendar') return
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && !event.defaultPrevented && !document.pointerLockElement) onClose()
-    }
-
-    window.addEventListener('keydown', closeOnEscape)
-    return () => window.removeEventListener('keydown', closeOnEscape)
-  }, [activeApp, onClose])
-
-  if (activeApp === 'welcome') {
-    return <Welcome onClose={onClose} />
-  }
-
-  if (activeApp === 'contact') {
-    return <Contact onClose={onClose} />
-  }
-
-  if (activeApp === 'calendar') {
-    return <GitHubCalendar onClose={onClose} />
-  }
+  useDialogFocus(windowRef)
 
   return (
     <div
@@ -64,6 +40,10 @@ export default function RoomOverlay({ activeApp, onClose }: Props) {
         role="dialog"
         aria-modal="true"
         aria-labelledby="room-overlay-title"
+        onKeyDown={(event) => {
+          if (event.key === 'Escape' && !event.defaultPrevented && !document.pointerLockElement)
+            onClose()
+        }}
       >
         <header className="room-overlay-titlebar">
           <div>
@@ -75,7 +55,9 @@ export default function RoomOverlay({ activeApp, onClose }: Props) {
             <button
               type="button"
               onClick={() => setMaximized((current) => !current)}
-              aria-label={maximized ? `Restore ${appTitles[activeApp]}` : `Maximize ${appTitles[activeApp]}`}
+              aria-label={
+                maximized ? `Restore ${appTitles[activeApp]}` : `Maximize ${appTitles[activeApp]}`
+              }
               title={maximized ? 'Restore' : 'Maximize'}
             >
               {maximized ? '❐' : '□'}
@@ -87,10 +69,22 @@ export default function RoomOverlay({ activeApp, onClose }: Props) {
         </header>
 
         <div className="room-overlay-content">
-          {activeApp === 'projects' && <Projects embedded />}
-          {activeApp === 'about' && <About embedded />}
+          {activeApp === 'projects' ? <Projects /> : <About />}
         </div>
       </section>
     </div>
   )
+}
+
+export default function RoomOverlay({ activeApp, onClose }: Props) {
+  switch (activeApp) {
+    case 'welcome':
+      return <Welcome onClose={onClose} />
+    case 'contact':
+      return <Contact onClose={onClose} />
+    case 'calendar':
+      return <GitHubCalendar onClose={onClose} />
+    default:
+      return <AppWindow activeApp={activeApp} onClose={onClose} />
+  }
 }

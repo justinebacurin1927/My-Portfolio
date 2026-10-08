@@ -1,6 +1,6 @@
 # Justine Bacurin — Portfolio
 
-A responsive, space-themed portfolio showcasing my background, technical skills, and selected software projects.
+A responsive, interactive pixel-room portfolio showcasing my background, technical skills, and selected software projects.
 
 The room starts at night on every page load. Click the moon to switch the whole room to daylight, then click the sun to return to night. Open About from the lower-right picture frame on the left wall, which holds a pixel-art Paramore band portrait. The artwork follows the room's lighting and turns gray during conversations. Compact room controls provide these actions on portrait and wide screens.
 
@@ -27,7 +27,7 @@ The tall frame on the far left holds a pixel-art portrait of Orange, my orange t
 
 The small wooden frame on the bookshelf displays a pixel-art version of ARKO's logo on a dark purple background matching the room wall. Click it to enlarge the artwork in the same full-screen viewer as the cat portraits; close with ×, Escape, or a click outside the picture. Its artwork follows the room's day/night lighting and turns gray with the background during conversations. Hover and keyboard focus trace the visible wooden edges of all four picture frames; the calendar highlight follows its stepped silhouette and binding tabs. Highlights stay aligned without moving the artwork, while the larger click areas remain available. The ARKO desktop shortcut opens the studio website.
 
-The frame artwork is saved at `public/brand/arko-frame-pixel-wall.png` (1122 × 1402), edited with the built-in imagegen tool using `public/brand/arko-frame-pixel-purple.png` as its reference. Final prompt: "Edit this pixel-art ARKO poster. Change only its muted lavender canvas surrounding the symbol to a flat, deep dark purple, approximately #17132b, matching a dark purple pixel-art room wall. It must visibly read as purple rather than pure black. Preserve the lime green symbol, the black A-shaped peak, its dot, the horizontal wave, and the lower rounded pad surrounding the lime keyhole. Keep the composition, proportions, opaque canvas, and sharp coarse square-pixel stair-step edges. No text, frame, scenery, gradients, blur, or smoothing."
+The ARKO frame artwork is saved at `public/brand/arko-frame-pixel-wall.png` (1122 × 1402).
 
 Chopper sleeps curled up on the right, replacing the large floor plant, with a pixel cloud and zZZ above his head. Click him to lift his head for two seconds; the cloud disappears while he is awake and returns when he settles back to sleep. Panther sits on the left watching the monitor. Click him to walk toward the viewer on all four legs using a four-frame gait, then out through the bottom of the screen. Each walk takes 1.8 seconds; as soon as his scratch effect finishes, he walks away from the viewer back to his spot. The room clock stays clear of his path. Repeat clicks during a reaction are ignored. Both pets cast layered, stepped shadows beneath their bodies and paws, with stronger, slightly wider shadows in daylight. Panther's shadow narrows for walking and follows him off-screen and back. Both pets match the room lighting and turn gray with the background during conversations. Keyboard activation and reduced-motion preferences are supported.
 
@@ -70,6 +70,8 @@ Vite prints the local development URL in the terminal.
 npm run dev      # Start the development server
 npm run sync:activity # Refresh aggregate public + private contribution counts
 npm run lint     # Run Oxlint
+npm run format   # Format source, scripts, and configuration
+npm run format:check # Check formatting without changing files
 npm run test:security # Check private-export permissions, data limits, and file safety
 npm audit        # Check known dependency advisories
 npm run build    # Type-check and create a production build
@@ -79,18 +81,30 @@ npm run deploy   # Publish dist/ to the gh-pages branch
 
 ## Updating content
 
-Most portfolio copy, profile links, skills, projects, screenshots, and résumé paths are configured in [`src/data.ts`](src/data.ts).
+Portfolio copy, profile links, skills, projects, and screenshot paths are configured in [`src/data.ts`](src/data.ts).
 
 Edit `welcomeConversation` in that file to change the greeting, questions, and replies.
 
 - Put project screenshots in `public/projects/`.
-- Put the profile photo in `public/photos/`.
+- Put room portraits and dialogue sprites in `public/photos/`. The social-preview photo is configured in `index.html`.
 - Pet sprites live in `public/pets/`; their interactions are in `src/components/RoomPets.tsx`.
 - Game rules and maze rendering live in `src/games/`; game interfaces are in `src/components/games/`.
-- Replace `public/resume.pdf`, then set `resumeUrl` in `src/data.ts` to enable the résumé button.
+- `public/resume.pdf` remains available as a direct download; the room has no résumé button.
 - Update `FORMSPREE_URL` in `src/components/Contact.tsx` if the contact form changes.
 
 Because the site is hosted under `/My-Portfolio/`, public asset paths should use `import.meta.env.BASE_URL` when referenced from TypeScript.
+
+## Code structure
+
+- `src/App.tsx` manages room lighting and hash-based app navigation.
+- `src/components/` contains the room, desktop, dialogue, and overlays. About and Projects render only inside room windows.
+- `src/hooks/useDialogFocus.ts` shares dialog focus, keyboard containment, and focus restoration.
+- `src/games/` contains game rules and renderers; `src/components/games/` contains their interfaces, loaded on demand.
+- `src/lib/github-activity.ts` validates, fetches, and caches contribution data.
+- `src/index.css` imports Tailwind and focused stylesheets in `src/styles/`, keeping their cascade order explicit.
+- `scripts/` contains the activity exporter and its security regression checks.
+
+The retired scrolling-site components, styles, and artwork variants have been removed. TypeScript strict mode and formatting checks apply to the maintained code.
 
 ## Deployment
 

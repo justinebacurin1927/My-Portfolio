@@ -10,9 +10,7 @@ export default function BootLoader() {
   useEffect(() => {
     const startedAt = performance.now()
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const minimumDisplayTime = reduceMotion
-      ? 150
-      : MINIMUM_DISPLAY_TIME
+    const minimumDisplayTime = reduceMotion ? 150 : MINIMUM_DISPLAY_TIME
     const exitTime = reduceMotion ? 30 : EXIT_TIME
     let exitTimer: ReturnType<typeof setTimeout> | undefined
     let removeTimer: ReturnType<typeof setTimeout> | undefined
@@ -54,7 +52,9 @@ export default function BootLoader() {
           <span aria-hidden="true">● ● ●</span>
         </div>
         <div className="boot-window-body">
-          <div className="boot-logo" aria-hidden="true">JB</div>
+          <div className="boot-logo" aria-hidden="true">
+            JB
+          </div>
           <p>LOADING PORTFOLIO...</p>
           <div className="boot-progress-track" aria-hidden="true">
             <span />

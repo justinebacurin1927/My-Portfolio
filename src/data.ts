@@ -2,16 +2,9 @@
 
 export const profile = {
   name: 'Justine Bacurin',
-  role: 'Software & Web Developer · BSIT Graduate',
-  tagline:
-    'I turn practical ideas into working products — from responsive interfaces to APIs, databases, and full-stack systems.',
   about:
     "I'm a Bachelor of Science in Information Technology graduate aspiring to grow as a software and web developer. I enjoy creating ideas and solving practical, real-world problems through code. I work across the stack — from building interfaces to wiring up databases — and I'm eager to keep exploring and learning new things throughout my career.",
   email: 'JustineBacurin1927@gmail.com',
-  // Set this to `${import.meta.env.BASE_URL}resume.pdf` to show the resume button.
-  resumeUrl: null,
-  // Put a photo in /public (e.g. /me.jpg) and set it here to replace the placeholder.
-  photo: `${import.meta.env.BASE_URL}photos/new.jpeg`,
   pixelPhoto: `${import.meta.env.BASE_URL}photos/profile-pixel.webp`,
   githubJoinedAt: '2025-09-10',
   studio: {
@@ -49,10 +42,10 @@ export type Project = {
   fileName: string
   fileType: string
   description: string
-  // Longer text shown in the project detail modal. Falls back to description.
+  // Longer text shown in the desktop preview. Falls back to description.
   overview?: string
   tags: string[]
-  // Put images in /public/projects/ and reference them like '/projects/one.png'.
+  // Prefix public/project paths with import.meta.env.BASE_URL for GitHub Pages.
   // Leave undefined to show a colored gradient placeholder instead.
   image?: string
   // Use the screenshot's width / height to preserve the complete frame.
@@ -72,7 +65,7 @@ export const projects: Project[] = [
     description:
       'An interactive, image-based educational guide to the administrative regions of the Philippines built with SDL2 and SDL_bgi graphics.',
     overview:
-      'A desktop application that teaches about the administrative regions of the Philippines through a point-and-click graphical interface. Browse regional information — governors, capitals, famous attractions, climate, and local cuisine — through interactive maps and clickable region buttons. Built entirely in C++ using the SDL_bgi library (an SDL2 reimplementation of Borland\'s classic BGI graphics), featuring custom RGB color management, real-time rendering, and event-driven navigation.',
+      "A desktop application that teaches about the administrative regions of the Philippines through a point-and-click graphical interface. Browse regional information — governors, capitals, famous attractions, climate, and local cuisine — through interactive maps and clickable region buttons. Built entirely in C++ using the SDL_bgi library (an SDL2 reimplementation of Borland's classic BGI graphics), featuring custom RGB color management, real-time rendering, and event-driven navigation.",
     image: `${import.meta.env.BASE_URL}projects/arko-region-guide.png`,
     tags: ['C++', 'SDL2', 'Graphics'],
     repo: 'https://github.com/justinebacurin1927/Tab-igator',
@@ -176,7 +169,7 @@ export const projects: Project[] = [
     description:
       'A short animated C++ scene using SDL_bgi graphics — Plankton walks across a SpongeBob-style background with custom RGB rendering.',
     overview:
-      'An animated 2D scene built with C++ and SDL_bgi (the SDL2 reimplementation of Borland\'s classic BGI graphics library). Plankton walks across a SpongeBob-style background while Mr. Krabs accuses him of stealing the Krabby Patty. Every frame is redrawn in real-time using custom RGB color macros, with Plankton\'s x-position shifting each cycle to create the walking animation. Demonstrates low-level graphics programming, frame-buffer rendering, and workarounds for SDL_bgi\'s color management quirks.',
+      "An animated 2D scene built with C++ and SDL_bgi (the SDL2 reimplementation of Borland's classic BGI graphics library). Plankton walks across a SpongeBob-style background while Mr. Krabs accuses him of stealing the Krabby Patty. Every frame is redrawn in real-time using custom RGB color macros, with Plankton's x-position shifting each cycle to create the walking animation. Demonstrates low-level graphics programming, frame-buffer rendering, and workarounds for SDL_bgi's color management quirks.",
     image: `${import.meta.env.BASE_URL}projects/plankton.png`,
     tags: ['C++', 'SDL2', 'Graphics', 'Animation'],
     repo: 'https://github.com/justinebacurin1927/Plankton-Running-Graphics',
@@ -211,7 +204,11 @@ export type ConversationTopic = {
   replies: string[]
 }
 
-export const welcomeConversation: { greeting: string; invitation: string; topics: ConversationTopic[] } = {
+export const welcomeConversation: {
+  greeting: string
+  invitation: string
+  topics: ConversationTopic[]
+} = {
   greeting: `Hey! I'm ${profile.name}. Welcome to my room. Come on in!`,
   invitation: 'What would you like to know?',
   topics: [
@@ -220,7 +217,7 @@ export const welcomeConversation: { greeting: string; invitation: string; topics
       question: 'Tell me about yourself',
       replies: [
         "I'm a Bachelor of Science in Information Technology graduate, growing as a software and web developer.",
-        "I enjoy turning practical ideas into working products. That can mean building an interface, connecting an API, or working with a database.",
+        'I enjoy turning practical ideas into working products. That can mean building an interface, connecting an API, or working with a database.',
         `I'm also part of ${profile.studio.name}, where we design, build, and ship together.`,
         "I'm always exploring and learning as I build. You can find more about my background and skills in the About section.",
       ],
@@ -240,7 +237,7 @@ export const welcomeConversation: { greeting: string; invitation: string; topics
       replies: [
         'I build responsive websites and full-stack applications, from restaurant and real estate sites to management systems and customer workspaces.',
         'My projects use tools such as JavaScript, React, PHP, Laravel, Python, and PostgreSQL. I work on interfaces, APIs, authentication, and databases.',
-        "I also explore C++ graphics! My regional guide and animated Plankton scene use SDL2 and SDL_bgi. The About section has my full tech stack.",
+        'I also explore C++ graphics! My regional guide and animated Plankton scene use SDL2 and SDL_bgi. The About section has my full tech stack.',
       ],
     },
     {

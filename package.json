@@ -9,6 +9,8 @@
     "prebuild": "node scripts/sync-github-activity.mjs --if-authorized",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "test:security": "node --test scripts/security.test.mjs",
     "preview": "vite preview",
     "deploy": "npx gh-pages -d dist"
@@ -30,6 +32,7 @@
     "@vitejs/plugin-react": "^6.0.2",
     "gh-pages": "6.1.1",
     "oxlint": "^1.69.0",
+    "prettier": "^3.9.9",
     "typescript": "~6.0.2",
     "vite": "^8.1.0"
   }

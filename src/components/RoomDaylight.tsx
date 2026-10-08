@@ -34,8 +34,20 @@ export default function RoomDaylight() {
             <defs>
               <clipPath id={clipId}>
                 {[0, 163].flatMap((top) => [
-                  <rect key={`${top}-first`} x="0" y={top} width={firstPane} height={top === 0 ? 148 : 151} />,
-                  <rect key={`${top}-second`} x={secondPane} y={top} width={width - secondPane} height={top === 0 ? 148 : 151} />,
+                  <rect
+                    key={`${top}-first`}
+                    x="0"
+                    y={top}
+                    width={firstPane}
+                    height={top === 0 ? 148 : 151}
+                  />,
+                  <rect
+                    key={`${top}-second`}
+                    x={secondPane}
+                    y={top}
+                    width={width - secondPane}
+                    height={top === 0 ? 148 : 151}
+                  />,
                 ])}
               </clipPath>
             </defs>
@@ -44,11 +56,13 @@ export default function RoomDaylight() {
                 <g
                   className="room-day-gust"
                   key={height}
-                  style={{
-                    '--gust-y': `${height}px`,
-                    animationDuration: `${6.2 + index * 1.3}s`,
-                    animationDelay: `${-index * 2.4 - windowIndex * 3.1}s`,
-                  } as CSSProperties}
+                  style={
+                    {
+                      '--gust-y': `${height}px`,
+                      animationDuration: `${6.2 + index * 1.3}s`,
+                      animationDelay: `${-index * 2.4 - windowIndex * 3.1}s`,
+                    } as CSSProperties
+                  }
                 >
                   <path d="M0 8H22V6H38V4H52V6H62V8H72 M12 14H29V12H45 M43 0H54V2H61" />
                 </g>
@@ -57,15 +71,20 @@ export default function RoomDaylight() {
                 <g
                   key={height}
                   className="room-day-leaf"
-                  style={{
-                    '--leaf-y': `${height}px`,
-                    '--leaf-color': color,
-                    animationDuration: `${duration}s`,
-                    animationDelay: `${delay - windowIndex * 2.7}s`,
-                  } as CSSProperties}
+                  style={
+                    {
+                      '--leaf-y': `${height}px`,
+                      '--leaf-color': color,
+                      animationDuration: `${duration}s`,
+                      animationDelay: `${delay - windowIndex * 2.7}s`,
+                    } as CSSProperties
+                  }
                 >
                   <g className="room-day-leaf-turn" style={{ animationDelay: `${-index * 0.6}s` }}>
-                    <path d="M0 5H2V3H5V1H11V0H15V4H13V7H10V9H5V8H2V6H0Z M-2 7H1V6H3V7H1V8H-2Z" fill="#455c36" />
+                    <path
+                      d="M0 5H2V3H5V1H11V0H15V4H13V7H10V9H5V8H2V6H0Z M-2 7H1V6H3V7H1V8H-2Z"
+                      fill="#455c36"
+                    />
                     <path d="M2 4H5V2H11V1H14V4H12V6H9V8H5V7H2Z" fill="var(--leaf-color)" />
                     <path d="M5 3H10V2H12V3H10V4H5Z" fill="#d0da87" />
                     <path d="M2 6H5V5H8V4H11V3H12" stroke="#536b36" strokeWidth="1" fill="none" />

@@ -14,7 +14,7 @@ const contentSecurityPolicy = [
   "frame-src 'none'",
   "worker-src 'none'",
   "base-uri 'none'",
-  "form-action https://formspree.io",
+  'form-action https://formspree.io',
 ].join('; ')
 
 const productionSecurity: Plugin = {
@@ -22,11 +22,13 @@ const productionSecurity: Plugin = {
   apply: 'build',
   transformIndexHtml: {
     order: 'post',
-    handler: () => [{
-      tag: 'meta',
-      attrs: { 'http-equiv': 'Content-Security-Policy', content: contentSecurityPolicy },
-      injectTo: 'head-prepend',
-    }],
+    handler: () => [
+      {
+        tag: 'meta',
+        attrs: { 'http-equiv': 'Content-Security-Policy', content: contentSecurityPolicy },
+        injectTo: 'head-prepend',
+      },
+    ],
   },
 }
 
