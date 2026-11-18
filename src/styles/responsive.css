@@ -200,9 +200,27 @@
   }
 
   .os-desktop-status span:last-child,
-  .os-item-count,
-  .os-sidebar {
+  .os-item-count {
     display: none;
+  }
+
+  .os-sidebar {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    flex: none;
+    gap: 0.6rem;
+    padding: 0.6rem 0.7rem;
+    border-right: 0;
+    border-bottom: 2px solid #020617;
+  }
+
+  .os-sidebar > p,
+  .os-sidebar > .os-storage-meter {
+    display: none;
+  }
+
+  .os-sidebar > button {
+    margin-bottom: 0;
   }
 
   .os-folder-launcher {
@@ -234,6 +252,11 @@
   .os-window-toolbar {
     grid-template-columns: auto minmax(0, 1fr);
   }
+  .os-window {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+  }
   .os-window-menu {
     gap: 0.72rem;
     font-size: 0.62rem;
@@ -242,10 +265,16 @@
     display: none;
   }
   .os-explorer-layout {
-    display: block;
+    display: flex;
     min-height: 0;
+    flex: 1;
+    flex-direction: column;
+    overflow: hidden;
   }
   .os-explorer-content {
+    min-height: 0;
+    flex: 1;
+    overflow: auto;
     padding: 0.7rem;
   }
   .os-files {
@@ -345,6 +374,7 @@
   .room-wall-profile-frame,
   .pixel-room-scene::before,
   .pixel-room-scene::after,
+  .room-sunset-wallpaper,
   .room-window-effects,
   .room-about-picture,
   .room-about-artwork,

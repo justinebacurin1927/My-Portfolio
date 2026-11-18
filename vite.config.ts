@@ -9,6 +9,7 @@ const contentSecurityPolicy = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data:",
   "font-src 'self'",
+  "media-src 'self'",
   "connect-src 'self' https://formspree.io https://github-contributions-api.jogruber.de",
   "object-src 'none'",
   "frame-src 'none'",

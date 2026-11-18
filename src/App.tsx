@@ -2,11 +2,14 @@ import { useCallback, useEffect, useState, type CSSProperties } from 'react'
 import Hero from './components/Hero'
 import BootLoader from './components/BootLoader'
 import RoomOverlay from './components/RoomOverlay'
+import useRoomClock from './hooks/useRoomClock'
+import { getNextRoomTheme } from './lib/roomLighting'
 import { isRoomApp, type RoomApp, type RoomTheme } from './types/room'
 
 const ROOM_WALLPAPERS = {
   night: `url("${import.meta.env.BASE_URL}pixel-developer-room-night-no-plant.webp")`,
   day: `url("${import.meta.env.BASE_URL}pixel-developer-room-day-no-plant.webp")`,
+  sunset: `url("${import.meta.env.BASE_URL}pixel-developer-room-sunset.webp")`,
 }
 
 const getHashApp = (): RoomApp | null => {
@@ -16,7 +19,13 @@ const getHashApp = (): RoomApp | null => {
 
 function App() {
   const [activeApp, setActiveApp] = useState<RoomApp | null>(getHashApp)
-  const [roomTheme, setRoomTheme] = useState<RoomTheme>('night')
+  const lighting = useRoomClock()
+  const [roomThemeOverride, setRoomThemeOverride] = useState<RoomTheme | null>(null)
+  const roomTheme = roomThemeOverride ?? lighting.theme
+
+  useEffect(() => {
+    setRoomThemeOverride(null)
+  }, [lighting.theme])
 
   useEffect(() => {
     const syncAppWithHistory = () => setActiveApp(getHashApp())
@@ -38,9 +47,12 @@ function App() {
     setActiveApp(null)
   }, [])
 
-  const toggleRoomTheme = useCallback(() => {
-    setRoomTheme((current) => (current === 'night' ? 'day' : 'night'))
-  }, [])
+  const toggleRoomLighting = useCallback(() => {
+    setRoomThemeOverride((current) => {
+      const next = getNextRoomTheme(current ?? lighting.theme)
+      return next === lighting.theme ? null : next
+    })
+  }, [lighting.theme])
 
   return (
     <div
@@ -52,12 +64,18 @@ function App() {
           '--room-wallpaper': ROOM_WALLPAPERS[roomTheme],
           '--room-night-wallpaper': ROOM_WALLPAPERS.night,
           '--room-day-wallpaper': ROOM_WALLPAPERS.day,
+          '--room-sunset-wallpaper': ROOM_WALLPAPERS.sunset,
         } as CSSProperties
       }
     >
       <BootLoader />
       <main className="room-main relative z-10">
-        <Hero onOpenApp={openApp} roomTheme={roomTheme} onToggleTheme={toggleRoomTheme} />
+        <Hero
+          onOpenApp={openApp}
+          roomTheme={roomTheme}
+          roomTime={lighting.time}
+          onToggleTheme={toggleRoomLighting}
+        />
         {activeApp && <RoomOverlay key={activeApp} activeApp={activeApp} onClose={closeApp} />}
       </main>
     </div>

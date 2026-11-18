@@ -12,6 +12,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test:security": "node --test scripts/security.test.mjs",
+    "test:room-lighting": "node --test scripts/room-lighting.test.mjs",
     "preview": "vite preview",
     "deploy": "npx gh-pages -d dist"
   },

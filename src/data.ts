@@ -1,5 +1,32 @@
 // Edit this file to customize your portfolio content.
 
+// Manual event: keep enabled until Jaycee chooses to remove the Christmas lights.
+export const roomDecorations = { christmasLights: true }
+
+export const radioStations = [
+  {
+    title: 'Underclocked',
+    subtitle: 'underunderclocked mix',
+    file: 'underclocked.mp3',
+    cover: 'underclocked-pixel.png',
+    coverAlt: 'Pixel art of a glowing computer and an hourglass on a quiet nighttime desk',
+  },
+  {
+    title: 'Come and Find Me',
+    subtitle: 'Resistor Anthems',
+    file: 'come-and-find-me.mp3',
+    cover: 'come-and-find-me-pixel.png',
+    coverAlt: 'Pixel art of a lantern beside a forest path leading to a warmly lit cabin',
+  },
+  {
+    title: 'A Night of Dizzy Spells',
+    subtitle: 'Resistor Anthems',
+    file: 'a-night-of-dizzy-spells.mp3',
+    cover: 'a-night-of-dizzy-spells-pixel.png',
+    coverAlt: 'Pixel art of a crescent moon and curling starlight above violet village rooftops',
+  },
+]
+
 export const profile = {
   name: 'Justine Bacurin',
   about:
@@ -37,10 +64,13 @@ export const skills = [
   'Auth',
 ]
 
+export type ProjectCategory = 'website' | 'project'
+
 export type Project = {
   title: string
   fileName: string
   fileType: string
+  category: ProjectCategory
   description: string
   // Longer text shown in the desktop preview. Falls back to description.
   overview?: string
@@ -62,6 +92,7 @@ export const projects: Project[] = [
     title: 'A.R.K.O — Region Knowledge & Orientation',
     fileName: 'arko-region-guide.cpp',
     fileType: 'CPP',
+    category: 'project',
     description:
       'An interactive, image-based educational guide to the administrative regions of the Philippines built with SDL2 and SDL_bgi graphics.',
     overview:
@@ -74,6 +105,7 @@ export const projects: Project[] = [
     title: 'ARKO Software Studio & Workspace',
     fileName: 'arko-platform.app',
     fileType: 'APP',
+    category: 'project',
     description:
       'A team-built software studio site and private operations workspace for web, mobile, automation, and AI projects.',
     overview:
@@ -87,6 +119,7 @@ export const projects: Project[] = [
     title: 'Yuenansichu Restaurant',
     fileName: 'yuenansichu-restaurant.web',
     fileType: 'WEB',
+    category: 'website',
     description:
       'A restaurant website with an animated food showcase, browsable menu, reservation flow, and contact form.',
     overview:
@@ -100,6 +133,7 @@ export const projects: Project[] = [
     title: 'Scarborough Real Estate',
     fileName: 'scarborough-real-estate.web',
     fileType: 'WEB',
+    category: 'website',
     description:
       'A responsive commercial real estate website concept with property listings, company and team profiles, and animated page transitions.',
     overview:
@@ -113,6 +147,7 @@ export const projects: Project[] = [
     title: 'RM Internet Services',
     fileName: 'rm-internet-services.web',
     fileType: 'WEB',
+    category: 'website',
     description:
       'A responsive internet service provider website with an animated neighborhood illustration, service information, FAQs, and a Facebook inquiry flow.',
     overview:
@@ -124,9 +159,71 @@ export const projects: Project[] = [
     linkLabel: 'Visit RM Internet',
   },
   {
+    title: 'Smartway Finance v2',
+    fileName: 'smartway-finance-v2.web',
+    fileType: 'WEB',
+    category: 'website',
+    description:
+      'A responsive finance broker website redesign with a video hero, interactive loan options, calculators, and finance guides.',
+    overview:
+      'A multi-page website redesign for Smartway Finance, an Australian finance broker. Visitors can explore vehicle, leisure, personal, and business finance, use loan calculators, read finance guides, and start an enquiry. Built with HTML, CSS, and JavaScript, with a video hero, animated finance selectors, custom SVG icons, testimonials, and responsive layouts with reduced-motion support.',
+    image: `${import.meta.env.BASE_URL}projects/smartway-finance-v2.webp`,
+    imageAspectRatio: 8 / 5,
+    tags: ['HTML', 'CSS', 'JavaScript', 'Responsive Design', 'SVG Animation'],
+    link: 'https://smartway-finance-version-2.vercel.app/',
+    linkLabel: 'Visit Smartway v2',
+    repo: 'https://github.com/justinebacurin1927/smartway-finance-v2',
+  },
+  {
+    title: 'CloudPG v2',
+    fileName: 'cloudpg-v2.web',
+    fileType: 'WEB',
+    category: 'website',
+    description:
+      'A responsive Cloud Payment Group website redesign presenting debt collection, payment management, legal services, and industry information.',
+    overview:
+      'A multi-page marketing website redesign for Cloud Payment Group, built with HTML, CSS, and JavaScript. The site brings together service pages, an interactive industry explorer, company information, insights, and contact details, with a video hero, custom mascot illustrations, and reduced-motion support. Client login and payment actions connect to existing external services.',
+    image: `${import.meta.env.BASE_URL}projects/cloudpg-v2.webp`,
+    imageAspectRatio: 8 / 5,
+    tags: ['HTML', 'CSS', 'JavaScript', 'Responsive Design', 'CSS Animation'],
+    link: 'https://cloudpg-version-3.vercel.app/',
+    linkLabel: 'Visit CloudPG v2',
+  },
+  {
+    title: 'Water King Plumbing',
+    fileName: 'waterking-plumbing.web',
+    fileType: 'WEB',
+    category: 'website',
+    description:
+      'A responsive plumbing website recreation with service and suburb pages, scroll-driven illustrations, and a booking enquiry demo.',
+    overview:
+      'A 36-page website recreation for Water King Plumbing, built with HTML, CSS, and JavaScript. Visitors can browse plumbing services and service areas, explore animated service illustrations, and open a booking enquiry with their selected service prefilled. The site includes a valve-and-water loader, scroll-responsive navigation, native phone and email links, and responsive layouts with reduced-motion support. The booking form validates locally as a frontend demonstration; it does not transmit bookings.',
+    image: `${import.meta.env.BASE_URL}projects/waterking-plumbing.webp`,
+    imageAspectRatio: 8 / 5,
+    tags: ['HTML', 'CSS', 'JavaScript', 'Vite', 'Responsive Design'],
+    link: 'https://waterking-plumbing.vercel.app/',
+    linkLabel: 'Visit Water King',
+  },
+  {
+    title: 'Aussie Clotheslines & Letterboxes',
+    fileName: 'aussie-clotheslines.web',
+    fileType: 'WEB',
+    category: 'website',
+    description:
+      'A responsive clothesline and letterbox website recreation with animated product showcases, a product finder, support guides, and enquiry drafts.',
+    overview:
+      'A 17-page website recreation for Aussie Clotheslines & Letterboxes, built with HTML, CSS, and JavaScript. The site combines animated product showcases with a clothesline finder, colour and lettering previews, searchable FAQs, selection guides, and policy overviews. Its enquiry flow validates the supplied details and prepares a reviewable email draft. Shopping links open the original store; this recreation does not implement a checkout or process orders.',
+    image: `${import.meta.env.BASE_URL}projects/aussie-clotheslines.webp`,
+    imageAspectRatio: 8 / 5,
+    tags: ['HTML', 'CSS', 'JavaScript', 'Responsive Design', 'CSS Animation'],
+    link: 'https://aussie-clotheslines.vercel.app/',
+    linkLabel: 'Visit Aussie Clotheslines',
+  },
+  {
     title: 'The Margin — 2D Survival Game',
     fileName: 'the-margin-2d.game',
     fileType: 'GAME',
+    category: 'project',
     description:
       'A turn-based 2D survival roguelike built with Java and libGDX, combining forest exploration, weather, combat, and companions.',
     overview:
@@ -137,22 +234,39 @@ export const projects: Project[] = [
     demoStatus: 'Desktop game · In development',
   },
   {
+    title: 'Thornwatch — Medieval RTS',
+    fileName: 'thornwatch.game',
+    fileType: 'GAME',
+    category: 'project',
+    description:
+      'A standalone medieval real-time strategy game with village building, resource gathering, army training, and defensive skirmishes.',
+    overview:
+      'A Java 17 and libGDX desktop strategy game in which players build a village, gather resources, train an army, and defend against raids before destroying the rival kingdom. Three skirmish maps and a guided introduction support base building, unit formations, healers, fire mages, siege weapons, upgradeable walls, and gates. Pixel-art characters and buildings, animated construction, a minimap, sound effects, and save/load controls support the playable desktop experience.',
+    image: `${import.meta.env.BASE_URL}projects/thornwatch.webp`,
+    imageAspectRatio: 8 / 5,
+    tags: ['Java 17', 'libGDX', 'LWJGL3', 'Maven', 'Game Development'],
+    demoStatus: 'Desktop game · Java 17+',
+  },
+  {
     title: 'Fresh Phones PH',
     fileName: 'freshphones-ph.web',
     fileType: 'WEB',
+    category: 'project',
     description:
       'A mobile device storefront and paluwagan platform with phone listings, payment plans, and a customer portal.',
     overview:
       'Fresh Phones PH helps customers browse devices, understand paluwagan payment schedules, and follow their applications and payments through a portal. The wider system supports operations such as customer records, payment verification, and agent workflows. Built with Next.js, React, NestJS, Prisma, and PostgreSQL.',
-    image: `${import.meta.env.BASE_URL}projects/freshphones-ph.png`,
+    image: `${import.meta.env.BASE_URL}projects/freshphones-ph.webp`,
+    imageAspectRatio: 8 / 5,
     tags: ['Next.js', 'React', 'NestJS', 'Prisma', 'PostgreSQL'],
-    link: 'https://freshphonesph.vercel.app/',
+    link: 'https://freshphonesph-web.vercel.app/',
     linkLabel: 'Visit Fresh Phones',
   },
   {
     title: 'Huntly',
     fileName: 'huntly-careers.web',
     fileType: 'WEB',
+    category: 'project',
     description:
       'A career support platform for organizing a job search, tailoring materials, and tracking applications.',
     overview:
@@ -166,6 +280,7 @@ export const projects: Project[] = [
     title: 'Plankton Running Graphics',
     fileName: 'plankton-run.cpp',
     fileType: 'CPP',
+    category: 'project',
     description:
       'A short animated C++ scene using SDL_bgi graphics — Plankton walks across a SpongeBob-style background with custom RGB rendering.',
     overview:
@@ -178,6 +293,7 @@ export const projects: Project[] = [
     title: 'Eyecare Optical Management System',
     fileName: 'eyecare-system.app',
     fileType: 'APP',
+    category: 'project',
     description:
       'A clinic and point-of-sale management system for optical and eyecare clinics built with Laravel 11, Bootstrap 5, and Alpine.js.',
     overview:
@@ -190,6 +306,7 @@ export const projects: Project[] = [
     title: 'AI-Enhanced Bubble Curtain System',
     fileName: 'bubble-curtain.ai',
     fileType: 'AI',
+    category: 'project',
     description:
       'A collaborative research project applying AI to monitor and control a bubble curtain system for environmental protection.',
     image: `${import.meta.env.BASE_URL}projects/bubble-curtain-dashboard.png`,

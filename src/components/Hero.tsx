@@ -1,14 +1,18 @@
-import { useEffect, useState, type MouseEvent } from 'react'
-import { profile } from '../data'
+import { useState, type MouseEvent } from 'react'
+import { profile, roomDecorations } from '../data'
 import RoomPets from './RoomPets'
 import RoomPhotoViewer, { type RoomPhoto } from './RoomPhotoViewer'
 import PixelCalendarIcon from './PixelCalendarIcon'
 import RoomDaylight from './RoomDaylight'
+import RoomChristmasLights from './RoomChristmasLights'
+import RoomRadio from './RoomRadio'
+import { getNextRoomTheme, roomThemeLabels } from '../lib/roomLighting'
 import type { RoomApp, RoomTheme } from '../types/room'
 
 type Props = {
   onOpenApp: (target: RoomApp) => void
   roomTheme: RoomTheme
+  roomTime: string
   onToggleTheme: () => void
 }
 
@@ -18,6 +22,8 @@ const moonPath =
   'M28 6H36V11H42V16H47V20H50V24H53V41H51V47H47V51H42V55H38V59H14V55H27V51H32V47H37V41H42V21H38V16H37V14H32V11H27V7H28Z'
 const sunPath =
   'M30 15H42V19H48V25H52V39H48V45H42V49H30V45H24V39H20V25H24V19H30Z M33 3H39V11H33Z M33 53H39V61H33Z M5 29H14V35H5Z M58 29H67V35H58Z M13 11H19V17H13Z M53 11H59V17H53Z M13 47H19V53H13Z M53 47H59V53H53Z'
+const sunsetPath =
+  'M20 34V28H24V22H30V18H42V22H48V28H52V34H20Z M12 38H60V42H12Z M20 48H52V52H20Z M34 6H38V14H34Z M10 20H16V24H10Z M56 20H62V24H56Z'
 const pencilHolderPath =
   'M7 38H12V16H16V12H21V19H27V25H34V15H38V7H43V12H47V30H52V35H57V78H53V84H11V81H7Z'
 const catPortrait = {
@@ -78,36 +84,11 @@ const skyPanes = [
     comet: false,
   },
 ] as const
-const roomClock = new Intl.DateTimeFormat('en-PH', {
-  timeZone: 'Asia/Manila',
-  hour: '2-digit',
-  minute: '2-digit',
-  hour12: true,
-})
-
-export default function Hero({ onOpenApp, roomTheme, onToggleTheme }: Props) {
-  const [roomTime, setRoomTime] = useState(() => roomClock.format(new Date()).toUpperCase())
+export default function Hero({ onOpenApp, roomTheme, roomTime, onToggleTheme }: Props) {
   const [selectedPhoto, setSelectedPhoto] = useState<RoomPhoto | null>(null)
-  const themeAction = roomTheme === 'night' ? 'Switch to day' : 'Switch to night'
-  const themePath = roomTheme === 'night' ? moonPath : sunPath
-
-  useEffect(() => {
-    let refreshTimer: number | undefined
-
-    const refreshTime = () => {
-      setRoomTime(roomClock.format(new Date()).toUpperCase())
-      window.clearTimeout(refreshTimer)
-      refreshTimer = window.setTimeout(refreshTime, 60_000 - (Date.now() % 60_000) + 50)
-    }
-
-    refreshTime()
-    document.addEventListener('visibilitychange', refreshTime)
-
-    return () => {
-      window.clearTimeout(refreshTimer)
-      document.removeEventListener('visibilitychange', refreshTime)
-    }
-  }, [])
+  const [radioOpen, setRadioOpen] = useState(false)
+  const themeAction = `Switch to ${roomThemeLabels[getNextRoomTheme(roomTheme)]} view`
+  const themePath = roomTheme === 'night' ? moonPath : roomTheme === 'sunset' ? sunsetPath : sunPath
 
   const openRoomApp = (event: MouseEvent<HTMLAnchorElement>, target: RoomApp) => {
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
@@ -118,6 +99,7 @@ export default function Hero({ onOpenApp, roomTheme, onToggleTheme }: Props) {
   return (
     <section className="pixel-room-hero" aria-label="Justine's pixel developer room">
       <div className="pixel-room-scene">
+        <div className="room-sunset-wallpaper" aria-hidden="true" />
         <div className="room-scene-art">
           <div className="room-window-effects room-window-effects--night" aria-hidden="true">
             {skyPanes.map(({ position, stars, comet }) => (
@@ -134,6 +116,12 @@ export default function Hero({ onOpenApp, roomTheme, onToggleTheme }: Props) {
             ))}
           </div>
           <RoomDaylight />
+          {roomDecorations.christmasLights && <RoomChristmasLights />}
+          <RoomRadio
+            open={radioOpen}
+            onOpen={() => setRadioOpen(true)}
+            onClose={() => setRadioOpen(false)}
+          />
           <a
             href="#projects"
             onClick={(event) => openRoomApp(event, 'projects')}
@@ -150,8 +138,9 @@ export default function Hero({ onOpenApp, roomTheme, onToggleTheme }: Props) {
             onClick={onToggleTheme}
             className="room-object-link room-theme-hotspot"
             aria-label={themeAction}
+            title={themeAction}
           >
-            <svg viewBox="0 0 64 72" aria-hidden="true">
+            <svg viewBox="0 0 72 72" aria-hidden="true">
               <path className="room-object-halo" d={themePath} />
               <path className="room-object-outline" d={themePath} />
             </svg>
@@ -165,6 +154,7 @@ export default function Hero({ onOpenApp, roomTheme, onToggleTheme }: Props) {
           >
             <span className="room-about-picture room-about-picture--night" aria-hidden="true" />
             <span className="room-about-picture room-about-picture--day" aria-hidden="true" />
+            <span className="room-about-picture room-about-picture--sunset" aria-hidden="true" />
             <img
               className="room-about-artwork"
               src={`${import.meta.env.BASE_URL}photos/paramore-frame-pixel.webp`}
@@ -226,6 +216,15 @@ export default function Hero({ onOpenApp, roomTheme, onToggleTheme }: Props) {
         </div>
 
         <nav className="room-compact-controls" aria-label="Room controls">
+          <button
+            type="button"
+            className="room-compact-action room-compact-radio"
+            onClick={() => setRadioOpen(true)}
+            aria-label="Open room radio"
+            aria-haspopup="dialog"
+          >
+            Radio
+          </button>
           <a
             href="#about"
             onClick={(event) => openRoomApp(event, 'about')}
@@ -256,6 +255,7 @@ export default function Hero({ onOpenApp, roomTheme, onToggleTheme }: Props) {
             onClick={onToggleTheme}
             className="room-compact-action room-compact-theme"
             aria-label={themeAction}
+            title={themeAction}
           >
             <svg viewBox="0 0 72 72" aria-hidden="true">
               <path d={themePath} />

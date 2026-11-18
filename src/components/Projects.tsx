@@ -6,8 +6,9 @@ import {
   FaFolder,
   FaFolderOpen,
   FaGithub,
+  FaGlobe,
 } from 'react-icons/fa6'
-import { profile, projects } from '../data'
+import { profile, projects, type ProjectCategory } from '../data'
 import BlurImage from './BlurImage'
 import ArcadeIcon from './ArcadeIcon'
 import { arcadeGames, arcadeTitles, type ArcadeGame } from '../games/catalog'
@@ -15,10 +16,18 @@ import ArcadeWindow from './ArcadeWindow'
 import SocialIcon, { type SocialNetwork } from './SocialIcon'
 import ArkoIcon from './ArkoIcon'
 
-const FEATURED_INDEX = Math.max(
-  0,
-  projects.findIndex((project) => project.image && project.fileType === 'APP'),
-)
+const PROJECT_FOLDERS = {
+  website: {
+    label: 'Websites',
+    icon: FaGlobe,
+    items: projects.filter((project) => project.category === 'website'),
+  },
+  project: {
+    label: 'Projects',
+    icon: FaFolderOpen,
+    items: projects.filter((project) => project.category === 'project'),
+  },
+}
 const DESKTOP_WALLPAPER = `url("${import.meta.env.BASE_URL}projects/pixel-landscape-desktop-16bit.webp")`
 const PAPERCLIP_ASSISTANT = `${import.meta.env.BASE_URL}pixel-paperclip-assistant.png`
 const DESKTOP_SOCIALS: { network: SocialNetwork; name: string; href: string }[] = [
@@ -26,7 +35,7 @@ const DESKTOP_SOCIALS: { network: SocialNetwork; name: string; href: string }[] 
   { network: 'linkedin', name: 'LinkedIn', href: profile.socials.linkedin },
 ]
 const PROJECT_TIPS = [
-  'Open the Projects folder, then select a file to preview it.',
+  'Choose Websites for marketing sites or Projects for apps, games, and other builds.',
   'Select a project file to see its screenshot, details, and technologies.',
   'Use View source or Live demo in a preview when those links are available.',
   'Minimize the explorer to return to the desktop. Use the taskbar to bring it back.',
@@ -37,15 +46,26 @@ export default function Projects() {
   const [folderOpen, setFolderOpen] = useState(false)
   const [windowMinimized, setWindowMinimized] = useState(false)
   const [windowMaximized, setWindowMaximized] = useState(false)
-  const [selectedIndex, setSelectedIndex] = useState(FEATURED_INDEX)
+  const [activeCategory, setActiveCategory] = useState<ProjectCategory>('project')
+  const [selectedFiles, setSelectedFiles] = useState<Record<ProjectCategory, string | undefined>>({
+    website: PROJECT_FOLDERS.website.items[0]?.fileName,
+    project:
+      PROJECT_FOLDERS.project.items.find((project) => project.image && project.fileType === 'APP')
+        ?.fileName ?? PROJECT_FOLDERS.project.items[0]?.fileName,
+  })
   const [tipIndex, setTipIndex] = useState(0)
   const [arcadeGame, setArcadeGame] = useState<ArcadeGame | null>(null)
   const [arcadeMinimized, setArcadeMinimized] = useState(false)
-  const selected = projects[selectedIndex]
+  const activeFolder = PROJECT_FOLDERS[activeCategory]
+  const visibleProjects = activeFolder.items
+  const selectedIndex = Math.max(
+    0,
+    visibleProjects.findIndex((project) => project.fileName === selectedFiles[activeCategory]),
+  )
+  const selected = visibleProjects[selectedIndex]
 
   const openFolder = () => {
     if (arcadeGame) setArcadeMinimized(true)
-    if (!folderOpen) setSelectedIndex(FEATURED_INDEX)
     setFolderOpen(true)
     setWindowMinimized(false)
   }
@@ -221,35 +241,62 @@ export default function Projects() {
                   <b>›</b>
                   <span>Desktop</span>
                   <b>›</b>
-                  <strong>Projects</strong>
+                  <strong>{activeFolder.label}</strong>
                 </div>
-                <span className="os-item-count">{projects.length} files</span>
+                <span className="os-item-count">{visibleProjects.length} files</span>
               </div>
 
               <div className="os-explorer-layout">
-                <aside className="os-sidebar" aria-label="Project locations">
+                <p className="sr-only" role="status">
+                  {activeFolder.label}: {visibleProjects.length} files
+                </p>
+                <aside className="os-sidebar" aria-label="Portfolio folders">
                   <p>QUICK ACCESS</p>
-                  <button type="button" className="is-active" aria-current="page">
-                    <FaFolderOpen aria-hidden="true" /> Projects
-                  </button>
+                  {(Object.keys(PROJECT_FOLDERS) as ProjectCategory[]).map((category) => {
+                    const folder = PROJECT_FOLDERS[category]
+                    const Icon = folder.icon
+                    return (
+                      <button
+                        type="button"
+                        key={category}
+                        className={activeCategory === category ? 'is-active' : undefined}
+                        aria-pressed={activeCategory === category}
+                        aria-controls="portfolio-files"
+                        onClick={() => setActiveCategory(category)}
+                      >
+                        <Icon aria-hidden="true" />
+                        <span>{folder.label}</span>
+                        <small aria-label={`${folder.items.length} files`}>
+                          {folder.items.length}
+                        </small>
+                      </button>
+                    )
+                  })}
                   <div className="os-storage-meter">
                     <span>PORTFOLIO DRIVE</span>
-                    <div>
-                      <i />
-                    </div>
                     <small>{projects.length} builds available</small>
                   </div>
                 </aside>
 
-                <div className="os-explorer-content">
-                  <div className="os-files" role="group" aria-label="Project files">
-                    {projects.map((project, index) => {
+                <div className="os-explorer-content" key={activeCategory}>
+                  <div
+                    id="portfolio-files"
+                    className="os-files"
+                    role="group"
+                    aria-label={`${activeFolder.label} files`}
+                  >
+                    {visibleProjects.map((project, index) => {
                       const isSelected = selectedIndex === index
                       return (
                         <button
                           type="button"
                           key={project.fileName}
-                          onClick={() => setSelectedIndex(index)}
+                          onClick={() =>
+                            setSelectedFiles((current) => ({
+                              ...current,
+                              [activeCategory]: project.fileName,
+                            }))
+                          }
                           className={`os-project-file ${isSelected ? 'is-selected' : ''}`}
                           aria-pressed={isSelected}
                         >
@@ -270,7 +317,7 @@ export default function Projects() {
                         <span>FILE PREVIEW</span>
                         <span>
                           {String(selectedIndex + 1).padStart(2, '0')} /{' '}
-                          {String(projects.length).padStart(2, '0')}
+                          {String(visibleProjects.length).padStart(2, '0')}
                         </span>
                       </div>
 
@@ -290,7 +337,9 @@ export default function Projects() {
                       )}
 
                       <div className="os-preview-body">
-                        <p className="os-file-path">PROJECTS/{selected.fileName}</p>
+                        <p className="os-file-path">
+                          {activeFolder.label.toUpperCase()}/{selected.fileName}
+                        </p>
                         <h3>{selected.title}</h3>
                         <p>{selected.overview ?? selected.description}</p>
 

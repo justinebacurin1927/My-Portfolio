@@ -50,6 +50,23 @@
   opacity: 1;
 }
 
+.room-sunset-wallpaper {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: var(--room-sunset-wallpaper) center / cover;
+  opacity: 0;
+  transition: opacity 600ms ease;
+}
+
+.pixel-app[data-room-theme='sunset'] .room-sunset-wallpaper {
+  opacity: 1;
+}
+
+.pixel-app[data-room-theme='sunset'] .pixel-room-scene::before {
+  opacity: 0.3;
+}
+
 .pixel-app[data-room-theme='day'] .pixel-room-scene::before {
   opacity: 0;
 }
@@ -70,16 +87,66 @@
   opacity: 0;
 }
 
-.pixel-app[data-room-theme='day'] .room-window-effects--night {
+.room-sunset-birds {
   opacity: 0;
+  fill: #352437;
 }
 
-.pixel-app[data-room-theme='day'] .room-window-effects--day {
+.room-sunset-bird {
+  animation: room-sunset-bird-flight 17s linear infinite;
+  animation-play-state: paused;
+}
+
+.room-sunset-bird-wings {
+  transform-box: fill-box;
+  transform-origin: center 75%;
+  animation: room-sunset-bird-flap 700ms steps(2, end) infinite;
+  animation-play-state: paused;
+}
+
+.pixel-app[data-room-theme='sunset'] .room-sunset-birds {
   opacity: 1;
 }
 
-.pixel-app[data-room-theme='day'] :is(.room-sky-star, .room-sky-comet) {
+.pixel-app[data-room-theme='sunset'] :is(.room-sunset-bird, .room-sunset-bird-wings) {
+  animation-play-state: running;
+}
+
+@keyframes room-sunset-bird-flight {
+  from {
+    transform: translate(-30px, var(--bird-y));
+  }
+  to {
+    transform: translate(calc(var(--window-width) + 30px), calc(var(--bird-y) - 22px));
+  }
+}
+
+@keyframes room-sunset-bird-flap {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(-0.5);
+  }
+}
+
+.pixel-app:is([data-room-theme='day'], [data-room-theme='sunset']) .room-window-effects--night {
+  opacity: 0;
+}
+
+.pixel-app:is([data-room-theme='day'], [data-room-theme='sunset']) .room-window-effects--day {
+  opacity: 1;
+}
+
+.pixel-app:is([data-room-theme='day'], [data-room-theme='sunset'])
+  :is(.room-sky-star, .room-sky-comet) {
   animation-play-state: paused;
+}
+
+.pixel-app[data-room-theme='sunset'] .room-window-effects--day {
+  opacity: 0.6;
+  filter: sepia(0.6) saturate(0.8);
 }
 
 .room-compact-controls {
@@ -111,6 +178,44 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
+}
+
+.room-christmas-lights {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.room-christmas-cable {
+  fill: none;
+  stroke: #345b43;
+  stroke-width: 4;
+}
+
+.room-christmas-halo {
+  fill: var(--bulb-color);
+  filter: blur(3px);
+  opacity: 0.14;
+}
+
+.room-christmas-glass {
+  fill: var(--bulb-color);
+  filter: drop-shadow(0 0 5px var(--bulb-color));
+}
+
+.pixel-app[data-room-theme='night'] .room-christmas-halo {
+  opacity: 0.24;
+}
+
+.pixel-app[data-room-theme='day'] .room-christmas-lights {
+  opacity: 0.8;
+}
+
+.pixel-app[data-room-theme='day'] .room-christmas-halo {
+  opacity: 0.06;
 }
 
 .room-window-pane {
@@ -263,7 +368,8 @@
   animation-play-state: paused;
 }
 
-.pixel-app[data-room-theme='day'] :is(.room-day-leaf, .room-day-leaf-turn, .room-day-gust) {
+.pixel-app:is([data-room-theme='day'], [data-room-theme='sunset'])
+  :is(.room-day-leaf, .room-day-leaf-turn, .room-day-gust) {
   animation-play-state: running;
 }
 
@@ -462,6 +568,15 @@
 .room-about-picture--day {
   background-image: var(--room-day-wallpaper);
   opacity: 0;
+}
+
+.room-about-picture--sunset {
+  background-image: var(--room-sunset-wallpaper);
+  opacity: 0;
+}
+
+.pixel-app[data-room-theme='sunset'] .room-about-picture--sunset {
+  opacity: 1;
 }
 
 .pixel-app[data-room-theme='day'] .room-about-picture--day {
@@ -790,7 +905,23 @@
   border-color: #98765e;
 }
 
-@media (max-aspect-ratio: 1 / 1), (min-aspect-ratio: 2 / 1) {
+.pixel-app[data-room-theme='sunset'] .room-scene-caption {
+  color: #392436;
+  background: rgba(255, 231, 196, 0.96);
+  border-color: #a46a50;
+}
+
+.pixel-app[data-room-theme='sunset']
+  :is(.room-about-artwork, .room-cat-artwork, .room-studio-artwork, .room-pets) {
+  filter: brightness(0.92) sepia(0.2) saturate(0.94);
+}
+
+.pixel-app[data-room-theme='sunset'] .room-calendar-hotspot {
+  filter: brightness(0.94) sepia(0.1) drop-shadow(4px 5px 0 rgba(40, 24, 30, 0.3));
+}
+
+/* Keep wall controls in place on desktop, including wide browser windows. */
+@media (max-aspect-ratio: 1 / 1), (max-height: 500px) and (min-aspect-ratio: 2 / 1) {
   .room-scene-art > .room-theme-hotspot,
   .room-scene-art > .room-about-hotspot,
   .room-scene-art > .room-calendar-hotspot {
@@ -861,6 +992,16 @@
 
   .pixel-app[data-room-theme='day'] .room-compact-theme svg {
     fill: #b26920;
+  }
+
+  .pixel-app[data-room-theme='sunset'] .room-compact-action {
+    color: #392436;
+    background: rgba(255, 231, 196, 0.96);
+    border-color: #a46a50;
+  }
+
+  .pixel-app[data-room-theme='sunset'] .room-compact-theme svg {
+    fill: #a54d22;
   }
 }
 
@@ -1410,7 +1551,7 @@
 
 /* Pixel game introduction opened from the portrait */
 
-@media (min-aspect-ratio: 2 / 1) {
+@media (max-height: 500px) and (min-aspect-ratio: 2 / 1) {
   .pixel-room-scene .room-wall-profile-frame {
     top: 1rem;
     left: 1rem;

@@ -14,6 +14,11 @@ const leaves = [
   { height: 291, duration: 8.8, delay: -4.6, color: '#708b3f' },
 ] as const
 
+const birds = [
+  { height: 44, duration: 17, delay: -6, scale: 0.62 },
+  { height: 98, duration: 21, delay: -12, scale: 0.48 },
+] as const
+
 export default function RoomDaylight() {
   const id = useId()
 
@@ -52,6 +57,30 @@ export default function RoomDaylight() {
               </clipPath>
             </defs>
             <g clipPath={`url(#${clipId})`}>
+              <g className="room-sunset-birds">
+                {birds.map(({ height, duration, delay, scale }, index) => (
+                  <g
+                    key={height}
+                    className="room-sunset-bird"
+                    style={
+                      {
+                        '--bird-y': `${height}px`,
+                        animationDuration: `${duration}s`,
+                        animationDelay: `${delay - windowIndex * 4}s`,
+                      } as CSSProperties
+                    }
+                  >
+                    <g transform={`scale(${scale})`}>
+                      <g
+                        className="room-sunset-bird-wings"
+                        style={{ animationDuration: `${0.7 + index * 0.2}s` }}
+                      >
+                        <path d="M0 1H3V3H6V5H9V7H12V6H15V4H18V2H21V0H24V3H21V5H18V7H15V9H12V11H9V9H6V7H3V5H0Z" />
+                      </g>
+                    </g>
+                  </g>
+                ))}
+              </g>
               {[82, 132, 245].map((height, index) => (
                 <g
                   className="room-day-gust"
